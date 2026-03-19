@@ -257,7 +257,7 @@ nav ul li a.active {
 
 .article-image-full {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 16 / 8;
   object-fit: cover;
   border-radius: var(--border-radius-lg);
   box-shadow: var(--shadow-md);
