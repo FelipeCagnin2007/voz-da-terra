@@ -19,7 +19,7 @@
         <nav class="nav-menu" id="nav-menu">
           <ul>
             <li><a href="../index.html">Página Inicial</a></li>
-            <li><a href="dados.html">Pesquisa e Dados</a></li>
+            <li><a href="dados.html" class="active">Pesquisa e Dados</a></li>
             <li><a href="projetos.html">Projetos Ecológicos</a></li>
             <li><a href="#">Baixar APP</a></li>
           </ul>
@@ -36,17 +36,17 @@
         <div class="stats-grid">
           <div class="stat-card">
             <span class="stat-label">CO2 Reduzido</span>
-            <h2 class="stat-value">14.2t</h2>
+            <h2 class="stat-value" data-count="14.2">0</h2>
             <span class="stat-change positive">↑ 12% este mês</span>
           </div>
           <div class="stat-card">
             <span class="stat-label">Árvores Plantadas</span>
-            <h2 class="stat-value">8,432</h2>
+            <h2 class="stat-value" data-count="8432">0</h2>
             <span class="stat-change positive">↑ 5% total</span>
           </div>
           <div class="stat-card">
             <span class="stat-label">Lixo Reciclado</span>
-            <h2 class="stat-value">3.1t</h2>
+            <h2 class="stat-value" data-count="3.1">0</h2>
             <span class="stat-change negative">↓ 2% semana</span>
           </div>
         </div>
@@ -54,28 +54,23 @@
         <article class="article-card chart-container">
           <div class="article-body">
             <h2>Impacto Ambiental por Categoria (2026)</h2>
-            <p>
-              Distribuição das frentes de atuação com base nos dados coletados
-              via App.
-            </p>
-
             <div class="simple-bar-chart">
               <div class="bar-group">
                 <label>Reflorestamento</label>
                 <div class="bar-bg">
-                  <div class="bar-fill" style="width: 85%"></div>
+                  <div class="bar-fill" data-width="85%"></div>
                 </div>
               </div>
               <div class="bar-group">
                 <label>Energia Limpa</label>
                 <div class="bar-bg">
-                  <div class="bar-fill" style="width: 60%"></div>
+                  <div class="bar-fill" data-width="60%"></div>
                 </div>
               </div>
               <div class="bar-group">
                 <label>Reciclagem</label>
                 <div class="bar-bg">
-                  <div class="bar-fill" style="width: 45%"></div>
+                  <div class="bar-fill" data-width="45%"></div>
                 </div>
               </div>
             </div>
@@ -91,7 +86,7 @@
                 Dados consolidados sobre a recuperação da fauna nos últimos 12
                 meses.
               </p>
-              <a href="#" class="read-more">Baixar PDF (.zip)</a>
+              <a href="#" class="read-more">Baixar PDF (.zip) →</a>
             </div>
           </article>
           <article class="article-card data-report">
@@ -102,7 +97,7 @@
                 Estudo universitário sobre a incidência de resíduos em centros
                 urbanos.
               </p>
-              <a href="#" class="read-more">Ver Detalhes</a>
+              <a href="#" class="read-more">Ver Detalhes →</a>
             </div>
           </article>
         </div>

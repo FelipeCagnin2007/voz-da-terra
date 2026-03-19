@@ -388,7 +388,7 @@ nav ul li a.active {
   }
 }
 
-/* --- ESTILOS ADICIONAIS: MÓDULO DE DADOS & DASHBOARD --- */
+/* --- ESTILOS EXCLUSIVOS PARA DADOS.HTML --- */
 
 .stats-grid {
   display: grid;
@@ -402,80 +402,63 @@ nav ul li a.active {
   padding: 25px;
   border-radius: var(--border-radius-md);
   box-shadow: var(--shadow-sm);
-  border: 1px solid rgba(0, 0, 0, 0.02);
   text-align: center;
-  transition: var(--transition);
+  /* Efeito de entrada */
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
-.stat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--shadow-md);
-}
-
-.stat-label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-light);
-  text-transform: uppercase;
-  display: block;
-  margin-bottom: 10px;
+.stat-card.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .stat-value {
-  font-size: 2.2rem;
+  font-size: 2.5rem;
   font-weight: 900;
   color: var(--dark-green);
-  margin-bottom: 5px;
+  margin: 10px 0;
 }
 
-.stat-change {
-  font-size: 0.8rem;
-  font-weight: 700;
-}
-
-.stat-change.positive {
-  color: #2ecc71;
-}
-.stat-change.negative {
-  color: #e74c3c;
-}
-
-/* Gráfico Simples com CSS pura */
+/* Gráfico de Barras */
 .simple-bar-chart {
-  margin-top: 30px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-}
-
-.bar-group label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin-bottom: 8px;
-  display: block;
+  margin-top: 20px;
 }
 
 .bar-bg {
-  background: #ecf0f1;
+  background: #eee;
   height: 12px;
   border-radius: 10px;
   overflow: hidden;
 }
 
 .bar-fill {
-  background: linear-gradient(90deg, var(--accent-green), var(--dark-green));
+  width: 0; /* Começa em zero para o JS animar */
   height: 100%;
+  background: linear-gradient(90deg, var(--accent-green), var(--dark-green));
   border-radius: 10px;
-  transition: width 1s ease-in-out;
+  transition: width 1.5s cubic-bezier(0.1, 0.5, 0.5, 1);
 }
 
-/* Responsividade de Dados */
-@media (max-width: 768px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
+.bar-group label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  display: block;
+}
 
-  .blog-header h1 {
-    text-align: center;
-  }
+/* Ajustes de cores para os labels de mudança */
+.stat-change.positive {
+  color: #27ae60;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+.stat-change.negative {
+  color: #e74c3c;
+  font-weight: 700;
+  font-size: 0.8rem;
 }
