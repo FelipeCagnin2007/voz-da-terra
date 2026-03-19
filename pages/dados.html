@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voz da Terra - Pesquisa e Dados</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="sidebar-top">
+        <div class="logo">
+          <img src="../logo.png" alt="logo" />
+          <div>VOZ DA<br />TERRA</div>
+        </div>
+        <button class="hamburger" id="btn-menu">
+          <span></span><span></span><span></span>
+        </button>
+        <nav class="nav-menu" id="nav-menu">
+          <ul>
+            <li><a href="../index.html">Página Inicial</a></li>
+            <li><a href="dados.html">Pesquisa e Dados</a></li>
+            <li><a href="projetos.html">Projetos Ecológicos</a></li>
+            <li><a href="#">Baixar APP</a></li>
+          </ul>
+        </nav>
+      </div>
+    </aside>
+
+    <main class="content">
+      <section class="feed-container">
+        <header class="blog-header">
+          <h1>Pesquisa e Dados</h1>
+        </header>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">CO2 Reduzido</span>
+            <h2 class="stat-value">14.2t</h2>
+            <span class="stat-change positive">↑ 12% este mês</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Árvores Plantadas</span>
+            <h2 class="stat-value">8,432</h2>
+            <span class="stat-change positive">↑ 5% total</span>
+          </div>
+          <div class="stat-card">
+            <span class="stat-label">Lixo Reciclado</span>
+            <h2 class="stat-value">3.1t</h2>
+            <span class="stat-change negative">↓ 2% semana</span>
+          </div>
+        </div>
+
+        <article class="article-card chart-container">
+          <div class="article-body">
+            <h2>Impacto Ambiental por Categoria (2026)</h2>
+            <p>
+              Distribuição das frentes de atuação com base nos dados coletados
+              via App.
+            </p>
+
+            <div class="simple-bar-chart">
+              <div class="bar-group">
+                <label>Reflorestamento</label>
+                <div class="bar-bg">
+                  <div class="bar-fill" style="width: 85%"></div>
+                </div>
+              </div>
+              <div class="bar-group">
+                <label>Energia Limpa</label>
+                <div class="bar-bg">
+                  <div class="bar-fill" style="width: 60%"></div>
+                </div>
+              </div>
+              <div class="bar-group">
+                <label>Reciclagem</label>
+                <div class="bar-bg">
+                  <div class="bar-fill" style="width: 45%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <div class="secondary-articles">
+          <article class="article-card data-report">
+            <div class="article-body">
+              <span class="category-tag">Relatório</span>
+              <h3>Análise Hídrica: Rio Tietê</h3>
+              <p>
+                Dados consolidados sobre a recuperação da fauna nos últimos 12
+                meses.
+              </p>
+              <a href="#" class="read-more">Baixar PDF (.zip)</a>
+            </div>
+          </article>
+          <article class="article-card data-report">
+            <div class="article-body">
+              <span class="category-tag">Pesquisa</span>
+              <h3>Consumo de Microplásticos</h3>
+              <p>
+                Estudo universitário sobre a incidência de resíduos em centros
+                urbanos.
+              </p>
+              <a href="#" class="read-more">Ver Detalhes</a>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+    <script src="../script.js"></script>
+  </body>
+</html>
