@@ -21,7 +21,13 @@
             <li><a href="index.html" class="active">Página Inicial</a></li>
             <li><a href="pages/dados.html">Pesquisa e Dados</a></li>
             <li><a href="pages/projetos.html">Projetos Ecológicos</a></li>
-            <li><a href="#">Baixar APP</a></li>
+            <li id="auth-menu-item">
+              <a
+                href="pages/login.html"
+                style="color: var(--accent-green); font-weight: 800"
+                >Acessar Conta</a
+              >
+            </li>
           </ul>
         </nav>
       </div>
@@ -33,45 +39,317 @@
           <h1>Principais Artigos</h1>
         </header>
 
-        <article class="article-card featured">
-          <img
-            src="https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=1200&q=80"
-            class="article-image"
-          />
-          <div class="article-body">
-            <span class="category-tag">Ecossistema</span>
-            <h2>A importância da preservação das matas ciliares</h2>
-            <p>As matas ciliares funcionam como "cílios" para os rios...</p>
-            <a href="pages/artigo.html" class="read-more"
-              >Ler artigo completo →</a
-            >
-          </div>
-        </article>
-
-        <div class="secondary-articles">
-          <article class="article-card">
-            <img
-              src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=600&q=80"
-              class="article-image small"
-            />
-            <div class="article-body">
-              <h3>5 Dicas para reduzir o plástico</h3>
-              <a href="#" class="read-more">Ver mais</a>
-            </div>
-          </article>
-          <article class="article-card">
-            <img
-              src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=600&q=80"
-              class="article-image small"
-            />
-            <div class="article-body">
-              <h3>O futuro é solar?</h3>
-              <a href="#" class="read-more">Ver mais</a>
-            </div>
-          </article>
+        <div id="featured-container">
+          <p>Sincronizando artigos...</p>
         </div>
+
+        <div class="secondary-articles" id="secondary-container"></div>
       </section>
     </main>
+
+    <template id="tpl-featured">
+      <article class="article-card featured" style="position: relative">
+        <div
+          style="
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+          "
+        >
+          <button
+            class="author-edit-btn"
+            style="
+              display: none;
+              background: #f39c12;
+              color: white;
+              border: none;
+              padding: 8px 15px;
+              border-radius: 8px;
+              font-weight: bold;
+              cursor: pointer;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            "
+          >
+            Editar
+          </button>
+          <button
+            class="admin-delete-btn"
+            style="
+              display: none;
+              background: #e74c3c;
+              color: white;
+              border: none;
+              padding: 8px 15px;
+              border-radius: 8px;
+              font-weight: bold;
+              cursor: pointer;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            "
+          >
+            Excluir
+          </button>
+        </div>
+
+        <img src="" class="article-image" alt="Capa do artigo" />
+        <div class="article-body">
+          <span class="category-tag">Ecossistema</span>
+          <h2 class="title"></h2>
+          <p class="excerpt"></p>
+          <a class="read-more">Ler artigo completo →</a>
+        </div>
+      </article>
+    </template>
+
+    <template id="tpl-secondary">
+      <article class="article-card" style="position: relative">
+        <div
+          style="
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+          "
+        >
+          <button
+            class="author-edit-btn"
+            style="
+              display: none;
+              background: #f39c12;
+              color: white;
+              border: none;
+              padding: 6px 12px;
+              border-radius: 6px;
+              font-size: 0.8rem;
+              font-weight: bold;
+              cursor: pointer;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            "
+          >
+            Editar
+          </button>
+          <button
+            class="admin-delete-btn"
+            style="
+              display: none;
+              background: #e74c3c;
+              color: white;
+              border: none;
+              padding: 6px 12px;
+              border-radius: 6px;
+              font-size: 0.8rem;
+              font-weight: bold;
+              cursor: pointer;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            "
+          >
+            Excluir
+          </button>
+        </div>
+
+        <img src="" class="article-image small" alt="Miniatura" />
+        <div class="article-body">
+          <h3 class="title"></h3>
+          <a class="read-more">Ver mais</a>
+        </div>
+      </article>
+    </template>
+
     <script src="script.js"></script>
+    <script>
+      async function handleAdminDelete(id, cardElement) {
+        if (
+          !confirm(
+            "Atenção: Deseja realmente excluir este artigo permanentemente?"
+          )
+        )
+          return;
+
+        const currentUser = JSON.parse(
+          sessionStorage.getItem("vozDaTerra_active_user")
+        );
+        cardElement.style.opacity = "0.5";
+
+        try {
+          const payload = {
+            action: "DELETE",
+            table: "artigos",
+            id: id,
+            userEmail: currentUser.email,
+          };
+
+          const response = await fetch(API_URL, {
+            method: "POST",
+            redirect: "follow",
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8",
+            },
+            body: JSON.stringify(payload),
+          });
+
+          if (!response.ok) {
+            throw new Error("Falha na rede: " + response.status);
+          }
+
+          const result = await response.json();
+
+          if (result.success) {
+            cardElement.style.transition = "all 0.5s";
+            cardElement.style.transform = "scale(0.9)";
+            cardElement.style.opacity = "0";
+            setTimeout(() => cardElement.remove(), 500);
+          } else {
+            throw new Error(
+              result.error || "Falha ao excluir no banco de dados."
+            );
+          }
+        } catch (error) {
+          console.error("Erro no delete:", error);
+          alert("Erro: " + error.message);
+          cardElement.style.opacity = "1";
+        }
+      }
+
+      async function loadHomeContent() {
+        const featuredContainer = document.getElementById("featured-container");
+        const secondaryContainer = document.getElementById(
+          "secondary-container"
+        );
+        const tplFeatured = document.getElementById("tpl-featured");
+        const tplSecondary = document.getElementById("tpl-secondary");
+        const authMenuItem = document.getElementById("auth-menu-item");
+
+        let activeUser = null;
+        try {
+          const storedUser = sessionStorage.getItem("vozDaTerra_active_user");
+          if (storedUser) {
+            activeUser = JSON.parse(storedUser);
+
+            authMenuItem.innerHTML = `
+            <a href="pages/criar-artigo.html">+ Novo Artigo</a>
+              <div style="padding: 14px 20px; color: var(--text-main);">
+                <span style="display: block; font-size: 0.85rem; font-weight: bold;">Olá, ${
+                  activeUser.nome.split(" ")[0]
+                }</span>
+                <span style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase;">${
+                  activeUser.role
+                }</span>
+              </div>
+              <a href="#" id="btn-logout" style="color: #e74c3c; font-weight: 600; padding-top: 5px;">Sair da Conta</a>
+            `;
+
+            document
+              .getElementById("btn-logout")
+              .addEventListener("click", (e) => {
+                e.preventDefault();
+                sessionStorage.removeItem("vozDaTerra_active_user");
+                window.location.reload();
+              });
+          }
+        } catch (e) {
+          console.error("Erro ao ler sessão:", e);
+        }
+
+        try {
+          const artigos = await DataService.request({ table: "artigos" });
+
+          if (!artigos || artigos.length === 0) {
+            featuredContainer.innerHTML = "<p>Nenhum artigo encontrado.</p>";
+            return;
+          }
+
+          featuredContainer.innerHTML = "";
+          secondaryContainer.innerHTML = "";
+
+          artigos.forEach((artigo, index) => {
+            const id = artigo.id || artigo.Id || artigo.ID || artigo.index;
+            const titulo = artigo.titulo || artigo.Título || "Sem título";
+            const conteudo = artigo.conteudo || artigo.Conteúdo || "";
+            const emailAutor =
+              artigo.email_autor ||
+              artigo.emailAutor ||
+              artigo.Email_autor ||
+              "";
+
+            const fallbackImg =
+              "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=1200&q=80";
+            const urlImagem =
+              artigo.imagem ||
+              artigo.url_imagem ||
+              artigo.Imagem ||
+              fallbackImg;
+
+            if (!id) return;
+
+            const templateTarget = index === 0 ? tplFeatured : tplSecondary;
+            const clone = templateTarget.content.cloneNode(true);
+            const cardRoot = clone.querySelector(".article-card");
+
+            clone.querySelector(".article-image").src = urlImagem;
+            clone.querySelector(".title").textContent = titulo;
+
+            if (index === 0) {
+              clone.querySelector(".excerpt").textContent =
+                conteudo.substring(0, 150) + "...";
+            }
+
+            const readMoreBtn = clone.querySelector(".read-more");
+            readMoreBtn.style.cursor = "pointer";
+            readMoreBtn.addEventListener("click", (e) => {
+              e.preventDefault();
+              sessionStorage.setItem("vozDaTerra_currentArticleId", id);
+              window.location.href = "pages/artigo.html";
+            });
+
+            // Gestão de Permissões (RBAC)
+            if (activeUser) {
+              // Permissão de Exclusão (Admin ou Autor)
+              if (
+                activeUser.role === "admin" ||
+                String(activeUser.email).toLowerCase() ===
+                  String(emailAutor).toLowerCase()
+              ) {
+                const deleteBtn = clone.querySelector(".admin-delete-btn");
+                deleteBtn.style.display = "block";
+                deleteBtn.addEventListener("click", (e) => {
+                  e.preventDefault();
+                  handleAdminDelete(id, cardRoot);
+                });
+              }
+
+              // Permissão de Edição (Autor ou Admin)
+              if (
+                String(activeUser.email).toLowerCase() ===
+                  String(emailAutor).toLowerCase() ||
+                activeUser.role === "admin"
+              ) {
+                const editBtn = clone.querySelector(".author-edit-btn");
+                editBtn.style.display = "block";
+                editBtn.addEventListener("click", (e) => {
+                  e.preventDefault();
+                  sessionStorage.setItem("vozDaTerra_editArticleId", id);
+                  window.location.href = "pages/editar-artigo.html";
+                });
+              }
+            }
+
+            if (index === 0) {
+              featuredContainer.appendChild(clone);
+            } else {
+              secondaryContainer.appendChild(clone);
+            }
+          });
+        } catch (err) {
+          console.error("Falha na carga do Index:", err);
+          featuredContainer.innerHTML = "<p>Erro ao conectar com a API.</p>";
+        }
+      }
+
+      window.addEventListener("load", loadHomeContent);
+    </script>
   </body>
 </html>

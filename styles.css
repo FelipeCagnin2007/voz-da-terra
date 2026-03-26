@@ -90,7 +90,7 @@ nav ul li a.active {
   transform: translateX(5px);
 }
 
-/* --- 3. HAMBÚRGUER (FIX CONTRASTE) --- */
+/* --- 3. HAMBÚRGUER --- */
 .hamburger {
   display: none;
   background: #e8f5e9;
@@ -388,7 +388,7 @@ nav ul li a.active {
   }
 }
 
-/* --- ESTILOS EXCLUSIVOS PARA DADOS.HTML --- */
+/* --- ESTILOS EXCLUSIVOS PARA DADOS.cri --- */
 
 .stats-grid {
   display: grid;
