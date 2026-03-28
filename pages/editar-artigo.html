@@ -7,24 +7,7 @@
     <link rel="stylesheet" href="../styles.css" />
   </head>
   <body>
-    <aside class="sidebar">
-      <div class="sidebar-top">
-        <div class="logo">
-          <img src="../logo.png" alt="logo" />
-          <div>VOZ DA<br />TERRA</div>
-        </div>
-        <button class="hamburger" id="btn-menu">
-          <span></span><span></span><span></span>
-        </button>
-        <nav class="nav-menu" id="nav-menu">
-          <ul>
-            <li><a href="../index.html">Página Inicial</a></li>
-            <li><a href="dados.html">Pesquisa e Dados</a></li>
-            <li><a href="projetos.html">Projetos Ecológicos</a></li>
-          </ul>
-        </nav>
-      </div>
-    </aside>
+    <div id="sidebar-placeholder"></div>
 
     <main class="content">
       <header class="main-header">
@@ -151,8 +134,18 @@
       </section>
     </main>
 
+    <script src="../components.js"></script>
     <script src="../script.js"></script>
     <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const isProject = urlParams.get("type") === "projetos";
+      const table = isProject ? "projetos" : "artigos";
+
+      if (isProject) {
+        document.title = "Voz da Terra - Editar Projeto";
+        document.querySelector("h1").textContent = "Editar Projeto";
+      }
+
       const activeUser = JSON.parse(
         sessionStorage.getItem("vozDaTerra_active_user")
       );
@@ -170,7 +163,7 @@
       // 1. Carrega os dados atuais do artigo
       window.addEventListener("load", async () => {
         try {
-          const artigos = await DataService.request({ table: "artigos" });
+          const artigos = await DataService.request({ table: table });
           const artigo = artigos.find(
             (a) => String(a.id || a.ID || a.Id) === String(editArticleId)
           );
@@ -237,7 +230,7 @@
             // A ordem deve ser idêntica à do CREATE: [titulo, conteudo, autor, email, data, imagem]
             const payload = {
               action: "UPDATE",
-              table: "artigos",
+              table: table,
               id: editArticleId,
               userEmail: activeUser.email,
               values: [
@@ -267,7 +260,7 @@
               feedback.style.display = "block";
 
               setTimeout(() => {
-                window.location.href = "../index.html";
+                window.location.href = isProject ? "projetos.html" : "../index.html";
               }, 1500);
             } else {
               throw new Error(result.error || "Erro ao salvar no banco.");

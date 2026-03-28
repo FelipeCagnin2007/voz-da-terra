@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voz da Terra - Novo Projeto</title>
+    <link rel="stylesheet" href="../styles.css" />
+  </head>
+  <body>
+    <div id="sidebar-placeholder"></div>
+
+    <main class="content">
+      <header class="main-header">
+        <a href="projetos.html" class="back-link">← Voltar para Projetos</a>
+      </header>
+
+      <section class="reading-container">
+        <article class="article-card" style="padding: 40px">
+          <h1
+            id="page-title"
+            style="
+              color: var(--dark-green);
+              margin-bottom: 25px;
+              font-weight: 900;
+              font-size: 2rem;
+            "
+          >
+            Lançar Novo Projeto
+          </h1>
+
+          <form id="form-criar-projeto">
+            <div style="margin-bottom: 20px">
+              <label style="display: block; margin-bottom: 8px; font-weight: 600">Título do Projeto</label>
+              <input
+                type="text"
+                id="proj-titulo"
+                required
+                placeholder="Ex: Horta Comunitária no Bairro"
+                style="
+                  width: 100%;
+                  padding: 14px;
+                  border: 1px solid rgba(0, 0, 0, 0.1);
+                  border-radius: var(--border-radius-md);
+                  font-family: inherit;
+                  font-size: 1rem;
+                  outline: none;
+                "
+              />
+            </div>
+
+            <div style="margin-bottom: 20px">
+              <label style="display: block; margin-bottom: 8px; font-weight: 600">URL da Imagem</label>
+              <input
+                type="url"
+                id="proj-imagem"
+                required
+                placeholder="https://exemplo.com/projeto.jpg"
+                style="
+                  width: 100%;
+                  padding: 14px;
+                  border: 1px solid rgba(0, 0, 0, 0.1);
+                  border-radius: var(--border-radius-md);
+                  font-family: inherit;
+                  font-size: 1rem;
+                  outline: none;
+                "
+              />
+            </div>
+
+            <div style="margin-bottom: 30px">
+              <label style="display: block; margin-bottom: 8px; font-weight: 600">Descrição do Projeto</label>
+              <textarea
+                id="proj-conteudo"
+                required
+                placeholder="Descreva os objetivos e impactos do seu projeto..."
+                style="
+                  width: 100%;
+                  padding: 14px;
+                  border: 1px solid rgba(0, 0, 0, 0.1);
+                  border-radius: var(--border-radius-md);
+                  font-family: inherit;
+                  font-size: 1rem;
+                  outline: none;
+                  min-height: 300px;
+                  resize: vertical;
+                "
+              ></textarea>
+            </div>
+
+            <p id="msg-feedback" style="font-size: 0.9rem; font-weight: 600; margin-bottom: 15px; text-align: center; display: none;"></p>
+
+            <button
+              type="submit"
+              id="btn-submit"
+              style="
+                width: 100%;
+                padding: 16px;
+                background: var(--dark-green);
+                color: var(--white);
+                border: none;
+                border-radius: var(--border-radius-md);
+                font-weight: 800;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: var(--transition);
+              "
+            >
+              Publicar Projeto
+            </button>
+          </form>
+        </article>
+      </section>
+    </main>
+
+    <script src="../components.js"></script>
+    <script src="../script.js"></script>
+    <script>
+      const activeUser = JSON.parse(sessionStorage.getItem("vozDaTerra_active_user"));
+
+      if (!activeUser) {
+        alert("Acesso negado. Faça login para lançar projetos.");
+        window.location.href = "login.html";
+      }
+
+      document.getElementById("form-criar-projeto").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const btn = document.getElementById("btn-submit");
+        const feedback = document.getElementById("msg-feedback");
+
+        const titulo = document.getElementById("proj-titulo").value.trim();
+        const imagem = document.getElementById("proj-imagem").value.trim();
+        const conteudo = document.getElementById("proj-conteudo").value.trim();
+        const dataAtual = new Date().toLocaleDateString("pt-BR");
+
+        btn.disabled = true;
+        btn.textContent = "Publicando...";
+        feedback.style.display = "none";
+
+        try {
+          const payload = {
+            action: "CREATE",
+            table: "projetos",
+            values: [titulo, conteudo, activeUser.nome, activeUser.email, dataAtual, imagem],
+          };
+
+          const response = await fetch(API_URL, {
+            method: "POST",
+            redirect: "follow",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(payload),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            feedback.textContent = "Projeto lançado com sucesso! Redirecionando...";
+            feedback.style.color = "var(--accent-green)";
+            feedback.style.display = "block";
+            setTimeout(() => { window.location.href = "projetos.html"; }, 1500);
+          } else {
+            throw new Error(result.error || "Erro ao salvar.");
+          }
+        } catch (error) {
+          feedback.textContent = error.message;
+          feedback.style.color = "#e74c3c";
+          feedback.style.display = "block";
+          btn.disabled = false;
+          btn.textContent = "Publicar Projeto";
+        }
+      });
+    </script>
+  </body>
+</html>

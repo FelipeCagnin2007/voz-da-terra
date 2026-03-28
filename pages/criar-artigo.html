@@ -7,24 +7,7 @@
     <link rel="stylesheet" href="../styles.css" />
   </head>
   <body>
-    <aside class="sidebar">
-      <div class="sidebar-top">
-        <div class="logo">
-          <img src="../logo.png" alt="logo" />
-          <div>VOZ DA<br />TERRA</div>
-        </div>
-        <button class="hamburger" id="btn-menu">
-          <span></span><span></span><span></span>
-        </button>
-        <nav class="nav-menu" id="nav-menu">
-          <ul>
-            <li><a href="../index.html">Página Inicial</a></li>
-            <li><a href="dados.html">Pesquisa e Dados</a></li>
-            <li><a href="projetos.html">Projetos Ecológicos</a></li>
-          </ul>
-        </nav>
-      </div>
-    </aside>
+    <div id="sidebar-placeholder"></div>
 
     <main class="content">
       <header class="main-header">
@@ -34,6 +17,7 @@
       <section class="reading-container">
         <article class="article-card" style="padding: 40px">
           <h1
+            id="page-title"
             style="
               color: var(--dark-green);
               margin-bottom: 25px;
@@ -146,8 +130,20 @@
       </section>
     </main>
 
+    <script src="../components.js"></script>
     <script src="../script.js"></script>
     <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const isProject = urlParams.get("type") === "projetos";
+      const table = isProject ? "projetos" : "artigos";
+
+      // 0. Update UI labels
+      if (isProject) {
+        document.title = "Voz da Terra - Novo Projeto";
+        document.getElementById("page-title").textContent = "Lançar Novo Projeto";
+        document.getElementById("btn-submit").textContent = "Publicar Projeto";
+        document.querySelector('label[for="art-titulo"]')?.textContent || (document.querySelectorAll('label')[0].textContent = "Título do Projeto");
+      }
       // 1. Proteção de Rota: Verifica se está logado
       const activeUser = JSON.parse(
         sessionStorage.getItem("vozDaTerra_active_user")
@@ -188,7 +184,7 @@
             // [titulo, conteudo, autor, email_autor, data, imagem]
             const payload = {
               action: "CREATE",
-              table: "artigos",
+              table: table,
               values: [
                 titulo,
                 conteudo,
@@ -220,7 +216,7 @@
 
               // Aguarda 2 segundos para o usuário ler a mensagem e manda para a Home
               setTimeout(() => {
-                window.location.href = "../index.html";
+                window.location.href = isProject ? "projetos.html" : "../index.html";
               }, 2000);
             } else {
               throw new Error(result.error || "Erro desconhecido ao salvar.");

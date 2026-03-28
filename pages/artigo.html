@@ -7,25 +7,7 @@
     <link rel="stylesheet" href="../styles.css" />
   </head>
   <body>
-    <aside class="sidebar">
-      <div class="sidebar-top">
-        <div class="logo">
-          <img src="../logo.png" alt="logo" />
-          <div>VOZ DA<br />TERRA</div>
-        </div>
-        <button class="hamburger" id="btn-menu">
-          <span></span><span></span><span></span>
-        </button>
-        <nav class="nav-menu" id="nav-menu">
-          <ul>
-            <li><a href="../index.html">Página Inicial</a></li>
-            <li><a href="dados.html">Pesquisa e Dados</a></li>
-            <li><a href="projetos.html">Projetos Ecológicos</a></li>
-            <li><a href="#">Baixar APP</a></li>
-          </ul>
-        </nav>
-      </div>
-    </aside>
+    <div id="sidebar-placeholder"></div>
 
     <main class="content">
       <header class="main-header">
@@ -64,48 +46,51 @@
       </section>
     </main>
 
+    <script src="../components.js"></script>
     <script src="../script.js"></script>
     <script>
       async function loadFullArticle() {
-        const articleId = sessionStorage.getItem("vozDaTerra_currentArticleId");
+        const urlParams = new URLSearchParams(window.location.search);
+        const type = urlParams.get("type") === "projetos" ? "projetos" : "artigos";
+        const articleId = sessionStorage.getItem(type === "projetos" ? "vozDaTerra_currentProjectId" : "vozDaTerra_currentArticleId");
 
         if (!articleId) {
           document.getElementById("article-loader").innerHTML =
-            "<h2>Erro: Nenhum artigo foi selecionado.</h2><p>Redirecionando para a página inicial...</p>";
+            `<h2>Erro: Nenhum ${type === "projetos" ? "projeto" : "artigo"} foi selecionado.</h2><p>Redirecionando...</p>`;
           setTimeout(() => {
-            window.location.href = "../index.html";
+            window.location.href = type === "projetos" ? "projetos.html" : "../index.html";
           }, 2500);
           return;
         }
 
         try {
-          const artigos = await DataService.request({ table: "artigos" });
+          const items = await DataService.request({ table: type });
 
-          const artigo = artigos.find((a) => {
+          const item = items.find((a) => {
             const currentId = a.id || a.Id || a.ID || a.index;
             return String(currentId) === String(articleId);
           });
 
-          if (!artigo) {
+          if (!item) {
             document.getElementById("article-loader").innerHTML =
-              "<h2>Artigo não localizado na base de dados.</h2>";
+              `<h2>${type === "projetos" ? "Projeto" : "Artigo"} não localizado na base de dados.</h2>`;
             return;
           }
 
           // Extração das propriedades da API
-          const titulo = artigo.titulo || artigo.Título || "Sem título";
-          const conteudoRaw = artigo.conteudo || artigo.Conteúdo || "";
-          const autor = artigo.autor || artigo.Autor || "Equipe Voz da Terra";
+          const titulo = item.titulo || item.Título || "Sem título";
+          const conteudoRaw = item.conteudo || item.Conteúdo || "";
+          const autor = item.autor || item.Autor || "Equipe Voz da Terra";
           const emailAutor =
-            artigo.email_autor || artigo.emailAutor || artigo.Email || "";
+            item.email_autor || item.emailAutor || item.Email || "";
           const dataPublicacao =
-            artigo.data || artigo.Data || "Data não informada";
+            item.data || item.Data || "Data não informada";
 
           // Captura da Imagem
           const fallbackImg =
             "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=1200&q=80";
           const urlImagem =
-            artigo.imagem || artigo.url_imagem || artigo.Imagem || fallbackImg;
+            item.imagem || item.url_imagem || item.Imagem || fallbackImg;
 
           // Data Binding no DOM
           document.getElementById("art-image").src = urlImagem;

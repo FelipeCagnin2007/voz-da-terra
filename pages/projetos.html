@@ -7,25 +7,7 @@
     <link rel="stylesheet" href="../styles.css" />
   </head>
   <body>
-    <aside class="sidebar">
-      <div class="sidebar-top">
-        <div class="logo">
-          <img src="../logo.png" alt="logo" />
-          <div>VOZ DA<br />TERRA</div>
-        </div>
-        <button class="hamburger" id="btn-menu">
-          <span></span><span></span><span></span>
-        </button>
-        <nav class="nav-menu" id="nav-menu">
-          <ul>
-            <li><a href="../index.html">Página Inicial</a></li>
-            <li><a href="dados.html">Pesquisa e Dados</a></li>
-            <li><a href="projetos.html">Projetos Ecológicos</a></li>
-            <li><a href="#">Baixar APP</a></li>
-          </ul>
-        </nav>
-      </div>
-    </aside>
+    <div id="sidebar-placeholder"></div>
 
     <main class="content">
       <section class="feed-container">
@@ -33,176 +15,143 @@
           <h1>Projetos Ecológicos</h1>
         </header>
 
-        <div class="projects-grid">
-          <article class="article-card project-card">
-            <div class="image-wrapper">
-              <img
-                src="https://images.unsplash.com/photo-1591033594798-33227a05780d?auto=format&fit=crop&w=600&q=80"
-                alt="Horta Comunitária"
-                class="article-image"
-              />
-            </div>
-            <div class="article-body">
-              <div class="project-header">
-                <span class="category-tag">Urbano</span>
-                <div class="rating">
-                  <span class="star">★</span>
-                  <span class="rating-value">4.9</span>
-                </div>
-              </div>
-              <h2>Horta Suspensa Vertical</h2>
-              <p>
-                Projeto focado em prédios de alta densidade para cultivo de
-                hortaliças orgânicas em varandas.
-              </p>
-              <div class="project-footer">
-                <span class="author">Por: <strong>BioCity Lab</strong></span>
-              </div>
-            </div>
-          </article>
-
-          <article class="article-card project-card">
-            <div class="image-wrapper">
-              <img
-                src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=600&q=80"
-                alt="Reciclagem Tech"
-                class="article-image"
-              />
-            </div>
-            <div class="article-body">
-              <div class="project-header">
-                <span class="category-tag">Tecnologia</span>
-                <div class="rating">
-                  <span class="star">★</span>
-                  <span class="rating-value">4.7</span>
-                </div>
-              </div>
-              <h2>Smart Recycle Bin</h2>
-              <p>
-                Lixeira inteligente que bonifica usuários com tokens ao
-                descartar eletrônicos corretamente.
-              </p>
-              <div class="project-footer">
-                <span class="author">Por: <strong>TechGreen</strong></span>
-              </div>
-            </div>
-          </article>
-
-          <article class="article-card project-card">
-            <div class="image-wrapper">
-              <img
-                src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=600&q=80"
-                alt="Reflorestamento"
-                class="article-image"
-              />
-            </div>
-            <div class="article-body">
-              <div class="project-header">
-                <span class="category-tag">Reflorestamento</span>
-                <div class="rating">
-                  <span class="star">★</span>
-                  <span class="rating-value">5.0</span>
-                </div>
-              </div>
-              <h2>Drones Semeadores</h2>
-              <p>
-                Uso de drones autônomos para dispersão de sementes nativas em
-                áreas de difícil acesso.
-              </p>
-              <div class="project-footer">
-                <span class="author">Por: <strong>SkySeed</strong></span>
-              </div>
-            </div>
-          </article>
-          <article class="article-card project-card">
-            <div class="image-wrapper">
-              <img
-                src="https://images.unsplash.com/photo-1484291470158-b8f8d608850d?auto=format&fit=crop&w=600&q=80"
-                alt="Limpeza Oceânica"
-                class="article-image"
-              />
-            </div>
-            <div class="article-body">
-              <div class="project-header">
-                <span class="category-tag">Oceanos</span>
-                <div class="rating">
-                  <span class="star">★</span>
-                  <span class="rating-value">4.8</span>
-                </div>
-              </div>
-              <h2>Clean Waves AI</h2>
-              <p>
-                Enxames de robôs subaquáticos autônomos que utilizam visão
-                computacional para identificar e coletar microplásticos em
-                corais.
-              </p>
-              <div class="project-footer">
-                <span class="author">Por: <strong>Blue Guardians</strong></span>
-              </div>
-            </div>
-          </article>
-
-          <article class="article-card project-card">
-            <div class="image-wrapper">
-              <img
-                src="https://images.unsplash.com/photo-1591033594798-33227a05780d?auto=format&fit=crop&w=600&q=80"
-                alt="Horta Comunitária"
-                class="article-image"
-              />
-            </div>
-            <div class="article-body">
-              <div class="project-header">
-                <span class="category-tag">Energia</span>
-                <div class="rating">
-                  <span class="star">★</span>
-                  <span class="rating-value">4.6</span>
-                </div>
-              </div>
-              <h2>Solar Chain Grid</h2>
-              <p>
-                Plataforma baseada em blockchain para vizinhos trocarem
-                excedentes de energia solar de forma direta e sem
-                intermediários.
-              </p>
-              <div class="project-footer">
-                <span class="author"
-                  >Por: <strong>SunShare Collective</strong></span
-                >
-              </div>
-            </div>
-          </article>
-
-          <article class="article-card project-card">
-            <div class="image-wrapper">
-              <img
-                src="https://images.unsplash.com/photo-1530026405186-ed1f139313f8?auto=format&fit=crop&w=600&q=80"
-                alt="Biomateriais"
-                class="article-image"
-              />
-            </div>
-            <div class="article-body">
-              <div class="project-header">
-                <span class="category-tag">Construção</span>
-                <div class="rating">
-                  <span class="star">★</span>
-                  <span class="rating-value">4.5</span>
-                </div>
-              </div>
-              <h2>Myco-Brick House</h2>
-              <p>
-                Desenvolvimento de tijolos biodegradáveis cultivados a partir de
-                fungos (micélio) com isolamento térmico superior ao concreto.
-              </p>
-              <div class="project-footer">
-                <span class="author"
-                  >Por: <strong>FungiBuild Inc.</strong></span
-                >
-              </div>
-            </div>
-          </article>
+        <div id="projects-container" class="projects-grid">
+          <p>Sincronizando projetos...</p>
         </div>
       </section>
     </main>
+
+    <template id="tpl-project">
+      <article class="article-card project-card" style="position: relative">
+        <div
+          style="
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+          "
+        >
+          <button class="author-edit-btn" style="display: none; background: #f39c12; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">Editar</button>
+          <button class="admin-delete-btn" style="display: none; background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">Excluir</button>
+        </div>
+        <div class="image-wrapper">
+          <img src="" class="article-image" alt="Capa do projeto" />
+        </div>
+        <div class="article-body">
+          <div class="project-header">
+            <span class="category-tag">Iniciativa</span>
+          </div>
+          <h2 class="title"></h2>
+          <p class="excerpt"></p>
+          <div class="project-footer">
+            <span class="author">Por: <strong class="author-name"></strong></span>
+            <a class="btn-project read-more">Ver detalhes</a>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <script src="../components.js"></script>
     <script src="../script.js"></script>
+    <script>
+      async function handleProjectDelete(id, cardElement) {
+        if (!confirm("Deseja realmente excluir este projeto?")) return;
+        
+        const currentUser = JSON.parse(sessionStorage.getItem("vozDaTerra_active_user"));
+        cardElement.style.opacity = "0.5";
+
+        try {
+          const response = await fetch(API_URL, {
+            method: "POST",
+            redirect: "follow",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({
+              action: "DELETE",
+              table: "projetos",
+              id: id,
+              userEmail: currentUser.email
+            }),
+          });
+
+          const result = await response.json();
+          if (result.success) {
+            cardElement.style.transform = "scale(0.9)";
+            cardElement.style.opacity = "0";
+            setTimeout(() => cardElement.remove(), 500);
+          } else {
+            throw new Error(result.error || "Erro ao excluir.");
+          }
+        } catch (error) {
+          alert("Erro: " + error.message);
+          cardElement.style.opacity = "1";
+        }
+      }
+
+      async function loadProjects() {
+        const container = document.getElementById("projects-container");
+        const template = document.getElementById("tpl-project");
+        const activeUser = JSON.parse(sessionStorage.getItem("vozDaTerra_active_user"));
+
+        try {
+          const projetos = await DataService.request({ table: "projetos" });
+          container.innerHTML = "";
+
+          if (!projetos || projetos.length === 0) {
+            container.innerHTML = "<p>Nenhum projeto encontrado.</p>";
+            return;
+          }
+
+          projetos.forEach(projeto => {
+            const id = projeto.id || projeto.Id || projeto.ID;
+            if (!id) return;
+
+            const clone = template.content.cloneNode(true);
+            const cardRoot = clone.querySelector(".article-card");
+            
+            const fallbackImg = "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80";
+            clone.querySelector(".article-image").src = projeto.imagem || projeto.url_imagem || fallbackImg;
+            clone.querySelector(".title").textContent = projeto.titulo || "Sem título";
+            clone.querySelector(".excerpt").textContent = (projeto.conteudo || "").substring(0, 120) + "...";
+            clone.querySelector(".author-name").textContent = projeto.autor || "Anônimo";
+
+            const readMoreBtn = clone.querySelector(".read-more");
+            readMoreBtn.addEventListener("click", () => {
+              sessionStorage.setItem("vozDaTerra_currentProjectId", id);
+              // Para simplificar, vou usar a mesma página de visualização ou uma similar
+              sessionStorage.setItem("vozDaTerra_currentArticleId", id); // Reuso a lógica de artigo se for igual
+              window.location.href = "artigo.html?type=projetos"; 
+            });
+
+            if (activeUser) {
+              const emailAutor = projeto.email_autor || projeto.emailAutor || "";
+              const isAdmin = activeUser.role === "admin";
+              const isOwner = String(activeUser.email).toLowerCase() === String(emailAutor).toLowerCase();
+
+              if (isAdmin || isOwner) {
+                const delBtn = clone.querySelector(".admin-delete-btn");
+                delBtn.style.display = "block";
+                delBtn.addEventListener("click", () => handleProjectDelete(id, cardRoot));
+
+                const editBtn = clone.querySelector(".author-edit-btn");
+                editBtn.style.display = "block";
+                editBtn.addEventListener("click", () => {
+                  sessionStorage.setItem("vozDaTerra_editArticleId", id);
+                  window.location.href = "editar-projeto.html";
+                });
+              }
+            }
+
+            container.appendChild(clone);
+          });
+        } catch (error) {
+          console.error(error);
+          container.innerHTML = "<p>Erro ao carregar projetos.</p>";
+        }
+      }
+
+      window.addEventListener("load", loadProjects);
+    </script>
   </body>
 </html>

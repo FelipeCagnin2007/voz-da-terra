@@ -7,31 +7,7 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <aside class="sidebar">
-      <div class="sidebar-top">
-        <div class="logo">
-          <img src="logo.png" alt="logo" />
-          <div>VOZ DA<br />TERRA</div>
-        </div>
-        <button class="hamburger" id="btn-menu">
-          <span></span><span></span><span></span>
-        </button>
-        <nav class="nav-menu" id="nav-menu">
-          <ul>
-            <li><a href="index.html" class="active">Página Inicial</a></li>
-            <li><a href="pages/dados.html">Pesquisa e Dados</a></li>
-            <li><a href="pages/projetos.html">Projetos Ecológicos</a></li>
-            <li id="auth-menu-item">
-              <a
-                href="pages/login.html"
-                style="color: var(--accent-green); font-weight: 800"
-                >Acessar Conta</a
-              >
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </aside>
+    <div id="sidebar-placeholder"></div>
 
     <main class="content">
       <section class="feed-container">
@@ -159,6 +135,7 @@
       </article>
     </template>
 
+    <script src="components.js"></script>
     <script src="script.js"></script>
     <script>
       async function handleAdminDelete(id, cardElement) {
@@ -228,27 +205,6 @@
           const storedUser = sessionStorage.getItem("vozDaTerra_active_user");
           if (storedUser) {
             activeUser = JSON.parse(storedUser);
-
-            authMenuItem.innerHTML = `
-            <a href="pages/criar-artigo.html">+ Novo Artigo</a>
-              <div style="padding: 14px 20px; color: var(--text-main);">
-                <span style="display: block; font-size: 0.85rem; font-weight: bold;">Olá, ${
-                  activeUser.nome.split(" ")[0]
-                }</span>
-                <span style="font-size: 0.75rem; color: var(--text-light); text-transform: uppercase;">${
-                  activeUser.role
-                }</span>
-              </div>
-              <a href="#" id="btn-logout" style="color: #e74c3c; font-weight: 600; padding-top: 5px;">Sair da Conta</a>
-            `;
-
-            document
-              .getElementById("btn-logout")
-              .addEventListener("click", (e) => {
-                e.preventDefault();
-                sessionStorage.removeItem("vozDaTerra_active_user");
-                window.location.reload();
-              });
           }
         } catch (e) {
           console.error("Erro ao ler sessão:", e);
