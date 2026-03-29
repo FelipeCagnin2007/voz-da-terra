@@ -75,8 +75,24 @@
 
       async function loadFullArticle() {
         const urlParams = new URLSearchParams(window.location.search);
-        const type = urlParams.get("type") === "projetos" ? "projetos" : "artigos";
+        const typeParam = urlParams.get("type") || "";
+        const isProject = typeParam.toLowerCase().includes("projeto");
+        const type = isProject ? "projetos" : "artigos";
+        
         const articleId = sessionStorage.getItem("vozDaTerra_active_content_id");
+        const navigationOrigin = sessionStorage.getItem("vozDaTerra_navigation_origin");
+
+        // Atualiza o link de volta baseado na ORIGEM (sessionStorage)
+        const backLink = document.querySelector(".back-link");
+        if (backLink) {
+          if (navigationOrigin === "projects") {
+            backLink.href = "projetos.html";
+            backLink.textContent = "← Voltar para Projetos";
+          } else {
+            backLink.href = "../index.html";
+            backLink.textContent = "← Voltar para o início";
+          }
+        }
 
         if (!articleId) {
           document.getElementById("article-loader").innerHTML =

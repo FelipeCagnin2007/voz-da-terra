@@ -120,10 +120,11 @@
 
           const readMoreBtn = clone.querySelector(".read-more");
           readMoreBtn.addEventListener("click", () => {
+            sessionStorage.setItem("vozDaTerra_navigation_origin", "projects");
             sessionStorage.setItem("vozDaTerra_active_content_id", id);
             window.location.href = "artigo.html?type=projetos";
           });
-
+          
           if (activeUser) {
             const emailAutor = projeto.email_autor || projeto.emailAutor || "";
             const isAdmin = activeUser.role === "admin";

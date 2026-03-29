@@ -256,6 +256,7 @@
           readMoreBtn.style.cursor = "pointer";
           readMoreBtn.addEventListener("click", (e) => {
             e.preventDefault();
+            sessionStorage.setItem("vozDaTerra_navigation_origin", "home");
             sessionStorage.setItem("vozDaTerra_active_content_id", id);
             window.location.href = "pages/artigo.html";
           });
