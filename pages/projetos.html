@@ -21,11 +21,60 @@
         </p>
       </header>
 
+      <div id="featured-project-container"></div>
       <div id="projects-container" class="projects-grid">
         <p>Sincronizando projetos...</p>
       </div>
     </section>
   </main>
+
+  <template id="tpl-featured-project">
+    <article class="article-card featured" style="position: relative">
+      <div style="
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+          ">
+        <button class="author-edit-btn" style="
+              display: none;
+              background: #f39c12;
+              color: white;
+              border: none;
+              padding: 8px 15px;
+              border-radius: 8px;
+              font-weight: bold;
+              cursor: pointer;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            ">
+          Editar
+        </button>
+        <button class="admin-delete-btn" style="
+              display: none;
+              background: #e74c3c;
+              color: white;
+              border: none;
+              padding: 8px 15px;
+              border-radius: 8px;
+              font-weight: bold;
+              cursor: pointer;
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            ">
+          Excluir
+        </button>
+      </div>
+
+      <img src="" class="article-image" alt="Capa do projeto" />
+      <div class="article-body">
+        <span class="category-tag">Iniciativa</span>
+        <h2 class="title" style="font-size: 2rem; margin-bottom: 15px;"></h2>
+        <p class="excerpt" style="font-size: 1.1rem; margin-bottom: 25px;"></p>
+        <a class="read-more">Ler projeto completo →</a>
+      </div>
+    </article>
+  </template>
 
   <template id="tpl-project">
     <article class="article-card" style="position: relative">
@@ -90,23 +139,30 @@
 
     async function loadProjects() {
       const container = document.getElementById("projects-container");
+      const featuredContainer = document.getElementById("featured-project-container");
       const template = document.getElementById("tpl-project");
+      const tplFeatured = document.getElementById("tpl-featured-project");
       const activeUser = JSON.parse(sessionStorage.getItem("vozDaTerra_active_user"));
 
       try {
         const projetos = await DataService.request({ table: "projetos" });
         container.innerHTML = "";
+        featuredContainer.innerHTML = "";
 
         if (!projetos || projetos.length === 0) {
           container.innerHTML = "<p>Nenhum projeto encontrado.</p>";
           return;
         }
 
-        projetos.forEach(projeto => {
+        const isOdd = projetos.length % 2 !== 0;
+
+        projetos.forEach((projeto, index) => {
           const id = projeto.id || projeto.Id || projeto.ID || projeto.index;
           if (!id && id !== 0) return;
 
-          const clone = template.content.cloneNode(true);
+          const useFeatured = isOdd && index === 0;
+          const templateTarget = useFeatured ? tplFeatured : template;
+          const clone = templateTarget.content.cloneNode(true);
           const cardRoot = clone.querySelector(".article-card");
 
           const fallbackImg = "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80";
@@ -114,9 +170,14 @@
           clone.querySelector(".title").textContent = projeto.titulo || "Sem título";
           const tagEl = clone.querySelector(".category-tag");
           if (tagEl) {
-            tagEl.textContent = projeto.tag || "Iniciativa";
+            tagEl.textContent = projeto.tag || (useFeatured ? "Destaque" : "Iniciativa");
           }
-          clone.querySelector(".excerpt").textContent = (projeto.conteudo || "").substring(0, 120) + "...";
+
+          if (useFeatured) {
+            clone.querySelector(".excerpt").textContent = (projeto.conteudo || "").substring(0, 150) + "...";
+          } else {
+            clone.querySelector(".excerpt").textContent = (projeto.conteudo || "").substring(0, 120) + "...";
+          }
 
           const readMoreBtn = clone.querySelector(".read-more");
           readMoreBtn.addEventListener("click", () => {
@@ -144,7 +205,11 @@
             }
           }
 
-          container.appendChild(clone);
+          if (useFeatured) {
+            featuredContainer.appendChild(clone);
+          } else {
+            container.appendChild(clone);
+          }
         });
       } catch (error) {
         console.error(error);

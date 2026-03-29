@@ -210,30 +210,20 @@
           return;
         }
 
-        featuredContainer.innerHTML = "";
-        secondaryContainer.innerHTML = "";
-
+        const isOdd = artigos.length % 2 !== 0;
         artigos.forEach((artigo, index) => {
           const id = artigo.id || artigo.Id || artigo.ID || artigo.index;
           const titulo = artigo.titulo || artigo.Título || "Sem título";
           const conteudo = artigo.conteudo || artigo.Conteúdo || "";
-          const emailAutor =
-            artigo.email_autor ||
-            artigo.emailAutor ||
-            artigo.Email_autor ||
-            "";
+          const emailAutor = artigo.email_autor || artigo.emailAutor || "";
 
-          const fallbackImg =
-            "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=1200&q=80";
-          const urlImagem =
-            artigo.imagem ||
-            artigo.url_imagem ||
-            artigo.Imagem ||
-            fallbackImg;
+          const fallbackImg = "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=1200&q=80";
+          const urlImagem = artigo.imagem || artigo.url_imagem || fallbackImg;
 
           if (!id) return;
 
-          const templateTarget = index === 0 ? tplFeatured : tplSecondary;
+          const useFeatured = isOdd && index === 0;
+          const templateTarget = useFeatured ? tplFeatured : tplSecondary;
           const clone = templateTarget.content.cloneNode(true);
           const cardRoot = clone.querySelector(".article-card");
 
@@ -241,15 +231,13 @@
           clone.querySelector(".title").textContent = titulo;
           const tagEl = clone.querySelector(".category-tag");
           if (tagEl) {
-            tagEl.textContent = artigo.tag || (index === 0 ? "Destaque" : "Geral");
+            tagEl.textContent = artigo.tag || (useFeatured ? "Destaque" : "Geral");
           }
 
-          if (index === 0) {
-            clone.querySelector(".excerpt").textContent =
-              conteudo.substring(0, 150) + "...";
+          if (useFeatured) {
+            clone.querySelector(".excerpt").textContent = conteudo.substring(0, 150) + "...";
           } else {
-            clone.querySelector(".excerpt").textContent =
-              conteudo.substring(0, 75) + "...";
+            clone.querySelector(".excerpt").textContent = conteudo.substring(0, 75) + "...";
           }
 
           const readMoreBtn = clone.querySelector(".read-more");
@@ -293,12 +281,17 @@
             }
           }
 
-          if (index === 0) {
+          if (useFeatured) {
             featuredContainer.appendChild(clone);
           } else {
             secondaryContainer.appendChild(clone);
           }
         });
+
+        // Caso não tenha nenhum em destaque (lista par), remove o placeholder do topo
+        if (!isOdd) {
+          featuredContainer.innerHTML = "";
+        }
       } catch (err) {
         console.error("Falha na carga do Index:", err);
         featuredContainer.innerHTML = "<p>Erro ao conectar com a API.</p>";

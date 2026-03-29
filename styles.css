@@ -3,7 +3,10 @@
   --sidebar-bg: rgba(255, 255, 255, 0.9);
   --main-bg: #f8faf9;
   --accent-green: #4caf50;
+  --accent-blue: #4c4caf;
   --dark-green: #1b5e20;
+  --dark-blue: #7373a5;
+  --light-green: #8bbd8e;
   --text-main: #2c3e50;
   --text-light: #7f8c8d;
   --white: #ffffff;
@@ -44,7 +47,7 @@ body {
 
 /* --- 2. SIDEBAR DESKTOP --- */
 .sidebar {
-  width: 280px;
+  width: 240px;
   background: var(--sidebar-bg);
   backdrop-filter: blur(20px);
   padding: 40px 24px;
@@ -271,26 +274,6 @@ nav ul li a.active {
   font-size: 0.8rem;
 }
 
-.btn-project-alt {
-  background: var(--accent-green) !important;
-}
-
-.btn-download-nav {
-  background: #2c3e50;
-  color: white !important;
-  margin-top: 15px;
-  text-align: center;
-  font-weight: 800;
-  border-radius: var(--border-radius-md);
-  padding: 12px !important;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-.btn-download-nav:hover {
-  background: #000;
-  transform: translateY(-2px);
-}
-
 .user-profile-menu,
 .auth-menu {
   padding: 20px;
@@ -319,7 +302,7 @@ nav ul li a.active {
 }
 
 .btn-create {
-  background: var(--dark-green);
+  background: var(--light-green);
   color: white !important;
   text-align: center;
   padding: 12px;
@@ -332,6 +315,22 @@ nav ul li a.active {
   background: var(--accent-green);
   box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
 }
+
+.btn-app {
+  background: var(--dark-blue);
+  color: white !important;
+  text-align: center;
+  padding: 12px;
+  border-radius: var(--border-radius-md);
+  font-weight: 700;
+  transition: var(--transition);
+}
+
+.btn-app:hover {
+  background: var(--accent-blue);
+  box-shadow: 0 4px 12px rgba(0, 0, 128, 0.3);
+}
+
 
 .logout-link {
   color: #e74c3c !important;
@@ -401,6 +400,7 @@ nav ul li a.active {
   font-size: 1.15rem;
   line-height: 1.8;
   margin-bottom: 25px;
+  text-align: justify;
 }
 
 .back-link {

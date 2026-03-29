@@ -27,7 +27,7 @@
       <div class="search-section">
         <div class="search-input-wrapper">
           <input type="text" v-model="citySearch" @keyup.enter="searchWAQI"
-            placeholder="Digite o nome da cidade (Ex: São Paulo, Paris, Tokyo...)" :disabled="isLoading" />
+            placeholder="Digite o nome da cidade (Ex: São Paulo, Jundiaí, Campinas...)" :disabled="isLoading" />
         </div>
         <button class="btn-search" @click="searchWAQI" :disabled="isLoading || !citySearch">
           <div v-if="isLoading" class="spinner"></div>

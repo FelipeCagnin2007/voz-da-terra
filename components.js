@@ -18,10 +18,6 @@ const Components = {
     if (activeUser) {
       authSection = `
         <div class="user-profile-menu">
-          <div class="create-buttons">
-            <a href="${relativePath}pages/criar-artigo.html" class="btn-create">+ Artigo</a>
-            <a href="${relativePath}pages/criar-projeto.html" class="btn-create btn-project-alt">+ Projeto</a>
-          </div>
           <div class="user-info">
             <span class="user-name">Olá, ${activeUser.nome.split(" ")[0]}</span>
             <span class="user-role">${activeUser.role}</span>
@@ -34,6 +30,21 @@ const Components = {
         <div class="auth-menu">
           <a href="${relativePath}pages/login.html" class="login-link">Acessar Conta</a>
         </div>
+      `;
+    }
+
+    let authSectionButtons = "";
+    if (activeUser) {
+      authSectionButtons = `
+      <li>
+      <a href="${relativePath}pages/criar-artigo.html" class="btn-create">+ Artigo</a>
+      </li>
+      <li>
+      <a href="${relativePath}pages/criar-projeto.html" class="btn-create">+ Projeto</a>
+      </li>
+      `;
+    } else {
+      authSectionButtons = `
       `;
     }
 
@@ -52,7 +63,10 @@ const Components = {
               <li><a href="${relativePath}index.html" class="${currentPage === "index.html" ? "active" : ""}">Página Inicial</a></li>
               <li><a href="${relativePath}pages/projetos.html" class="${currentPage === "projetos.html" ? "active" : ""}">Projetos Ecológicos</a></li>
               <li><a href="${relativePath}pages/dados.html" class="${currentPage === "dados.html" ? "active" : ""}">Pesquisa e Dados</a></li>
-              <li><a href="${relativePath}aplicativo.apk" class="btn-download-nav">Baixar APP</a></li>
+              ${authSectionButtons}
+              <li>
+              <a href="${relativePath}aplicativo.apk" class="btn-app">Baixar APP</a>
+              </li>
             </ul>
             <div class="sidebar-auth-mobile">
               ${authSection}
