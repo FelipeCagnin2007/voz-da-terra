@@ -50,8 +50,8 @@ const Components = {
           <nav class="nav-menu" id="nav-menu">
             <ul>
               <li><a href="${relativePath}index.html" class="${currentPage === "index.html" ? "active" : ""}">Página Inicial</a></li>
-              <li><a href="${relativePath}pages/dados.html" class="${currentPage === "dados.html" ? "active" : ""}">Pesquisa e Dados</a></li>
               <li><a href="${relativePath}pages/projetos.html" class="${currentPage === "projetos.html" ? "active" : ""}">Projetos Ecológicos</a></li>
+              <li><a href="${relativePath}pages/dados.html" class="${currentPage === "dados.html" ? "active" : ""}">Pesquisa e Dados</a></li>
               <li><a href="${relativePath}aplicativo.apk" class="btn-download-nav">Baixar APP</a></li>
             </ul>
             <div class="sidebar-auth-mobile">

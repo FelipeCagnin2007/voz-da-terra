@@ -19,24 +19,6 @@ const DataService = {
 
 // 2. INTERFACE E ANIMAÇÕES
 document.addEventListener("DOMContentLoaded", () => {
-  // Controle do Menu Hambúrguer
-  const btnMenu = document.getElementById("btn-menu");
-  const navMenu = document.getElementById("nav-menu");
-
-  if (btnMenu && navMenu) {
-    btnMenu.addEventListener("click", (e) => {
-      e.stopPropagation();
-      btnMenu.classList.toggle("active");
-      navMenu.classList.toggle("active");
-    });
-
-    document.addEventListener("click", (e) => {
-      if (!navMenu.contains(e.target) && !btnMenu.contains(e.target)) {
-        btnMenu.classList.remove("active");
-        navMenu.classList.remove("active");
-      }
-    });
-  }
 
   // Lógica do Contador (para a página de dados)
   const countUp = (el) => {

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Voz da Terra - Novo Projeto</title>
+  <link rel="icon" type="image/png" href="../logo.png" />
     <link rel="stylesheet" href="../styles.css" />
   </head>
   <body>
@@ -65,6 +66,33 @@
                   outline: none;
                 "
               />
+            </div>
+
+            <div style="margin-bottom: 20px">
+              <label style="display: block; margin-bottom: 8px; font-weight: 600">Categoria (Tag)</label>
+              <select
+                id="proj-tag"
+                required
+                style="
+                  width: 100%;
+                  padding: 14px;
+                  border: 1px solid rgba(0, 0, 0, 0.1);
+                  border-radius: var(--border-radius-md);
+                  font-family: inherit;
+                  font-size: 1rem;
+                  outline: none;
+                  background: white;
+                "
+              >
+                <option value="" disabled selected>Escolha uma categoria</option>
+                <option value="Reflorestamento">Reflorestamento</option>
+                <option value="Preservação Fauna">Preservação Fauna</option>
+                <option value="Gestão Hídrica">Gestão Hídrica</option>
+                <option value="Educação Ambiental">Educação Ambiental</option>
+                <option value="Ecologia Urbana">Ecologia Urbana</option>
+                <option value="Inovação Verde">Inovação Verde</option>
+                <option value="Voluntariado">Voluntariado</option>
+              </select>
             </div>
 
             <div style="margin-bottom: 30px">
@@ -131,6 +159,7 @@
         const titulo = document.getElementById("proj-titulo").value.trim();
         const imagem = document.getElementById("proj-imagem").value.trim();
         const conteudo = document.getElementById("proj-conteudo").value.trim();
+        const tag = document.getElementById("proj-tag").value;
         const dataAtual = new Date().toLocaleDateString("pt-BR");
 
         btn.disabled = true;
@@ -141,7 +170,7 @@
           const payload = {
             action: "CREATE",
             table: "projetos",
-            values: [titulo, conteudo, activeUser.nome, activeUser.email, dataAtual, imagem],
+            values: [titulo, conteudo, activeUser.nome, activeUser.email, dataAtual, imagem, tag],
           };
 
           const response = await fetch(API_URL, {

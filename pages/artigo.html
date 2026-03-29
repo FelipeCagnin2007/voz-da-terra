@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Voz da Terra - Artigo</title>
+  <link rel="icon" type="image/png" href="../logo.png" />
     <link rel="stylesheet" href="../styles.css" />
   </head>
   <body>
@@ -49,31 +50,74 @@
     <script src="../components.js"></script>
     <script src="../script.js"></script>
     <script>
+      const formatDate = (dateStr) => {
+        if (!dateStr || dateStr === "Data não informada") return dateStr;
+        
+        let date = new Date(dateStr);
+        
+        // Se a conversão direta falhar, tenta tratar DD/MM/YYYY
+        if (isNaN(date.getTime())) {
+          let parts = dateStr.split(/[\/\-]/);
+          if (parts.length === 3) {
+            if (parts[0].length === 4) date = new Date(parts[0], parts[1]-1, parts[2]);
+            else date = new Date(parts[2], parts[1]-1, parts[0]);
+          }
+        }
+
+        if (isNaN(date.getTime())) return dateStr;
+
+        const d = String(date.getDate()).padStart(2, '0');
+        const m = String(date.getMonth() + 1).padStart(2, '0');
+        const y = date.getFullYear();
+
+        return `Publicado em ${d}/${m}/${y}`;
+      };
+
       async function loadFullArticle() {
         const urlParams = new URLSearchParams(window.location.search);
         const type = urlParams.get("type") === "projetos" ? "projetos" : "artigos";
-        const articleId = sessionStorage.getItem(type === "projetos" ? "vozDaTerra_currentProjectId" : "vozDaTerra_currentArticleId");
+        const articleId = sessionStorage.getItem("vozDaTerra_active_content_id");
 
         if (!articleId) {
           document.getElementById("article-loader").innerHTML =
-            `<h2>Erro: Nenhum ${type === "projetos" ? "projeto" : "artigo"} foi selecionado.</h2><p>Redirecionando...</p>`;
+            `<h2>Erro: Nenhum conteúdo selecionado.</h2><p>Redirecionando...</p>`;
           setTimeout(() => {
-            window.location.href = type === "projetos" ? "projetos.html" : "../index.html";
+            window.location.href = "../index.html";
           }, 2500);
           return;
         }
 
         try {
-          const items = await DataService.request({ table: type });
+          let items = await DataService.request({ table: type });
+          
+          if (!Array.isArray(items)) {
+            throw new Error(`Dados inválidos recebidos da API para: ${type}`);
+          }
 
-          const item = items.find((a) => {
-            const currentId = a.id || a.Id || a.ID || a.index;
-            return String(currentId) === String(articleId);
+          let item = items.find((a) => {
+            const currentId = String(a.id || a.Id || a.ID || a.index || "").trim();
+            const targetId = String(articleId || "").trim();
+            return currentId === targetId && targetId !== "";
           });
+
+          // FALLBACK: Se não achar na tabela sugerida, tenta na outra
+          if (!item) {
+            const otherType = type === "projetos" ? "artigos" : "projetos";
+            const otherItems = await DataService.request({ table: otherType });
+            if (Array.isArray(otherItems)) {
+              item = otherItems.find((a) => {
+                const currentId = String(a.id || a.Id || a.ID || a.index || "").trim();
+                const targetId = String(articleId || "").trim();
+                return currentId === targetId;
+              });
+            }
+          }
 
           if (!item) {
             document.getElementById("article-loader").innerHTML =
-              `<h2>${type === "projetos" ? "Projeto" : "Artigo"} não localizado na base de dados.</h2>`;
+              `<h2>Conteúdo não localizado (ID: ${articleId}).</h2>
+               <p>Verifique se o item ainda existe na planilha.</p>
+               <a href="../index.html" class="read-more">Voltar para Início</a>`;
             return;
           }
 
@@ -95,7 +139,11 @@
           // Data Binding no DOM
           document.getElementById("art-image").src = urlImagem;
           document.getElementById("art-title").textContent = titulo;
-          document.getElementById("art-date").textContent = dataPublicacao;
+          const tagEl = document.getElementById("art-category");
+          if (tagEl) {
+            tagEl.textContent = item.tag || (type === "projetos" ? "Iniciativa" : "Ecossistema");
+          }
+          document.getElementById("art-date").textContent = formatDate(dataPublicacao);
 
           const authorNode = document.getElementById("art-author");
           if (emailAutor && String(emailAutor).trim() !== "") {

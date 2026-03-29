@@ -1,157 +1,158 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Voz da Terra - Projetos Ecológicos</title>
-    <link rel="stylesheet" href="../styles.css" />
-  </head>
-  <body>
-    <div id="sidebar-placeholder"></div>
 
-    <main class="content">
-      <section class="feed-container">
-        <header class="blog-header">
-          <h1>Projetos Ecológicos</h1>
-        </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voz da Terra - Projetos Ecológicos</title>
+  <link rel="icon" type="image/png" href="../logo.png" />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
 
-        <div id="projects-container" class="projects-grid">
-          <p>Sincronizando projetos...</p>
-        </div>
-      </section>
-    </main>
+<body>
+  <div id="sidebar-placeholder"></div>
 
-    <template id="tpl-project">
-      <article class="article-card project-card" style="position: relative">
-        <div
-          style="
+  <main class="content">
+    <section class="feed-container">
+      <header class="blog-header">
+        <h1>Projetos Ecológicos</h1>
+        <p style="color: var(--text-light); margin-top: -10px; margin-bottom: 30px;">
+          Conheça as iniciativas que estão fazendo a diferença.
+        </p>
+      </header>
+
+      <div id="projects-container" class="projects-grid">
+        <p>Sincronizando projetos...</p>
+      </div>
+    </section>
+  </main>
+
+  <template id="tpl-project">
+    <article class="article-card" style="position: relative">
+      <div style="
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: 10px;
+            right: 10px;
             display: flex;
-            gap: 10px;
+            gap: 8px;
             z-index: 10;
-          "
-        >
-          <button class="author-edit-btn" style="display: none; background: #f39c12; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">Editar</button>
-          <button class="admin-delete-btn" style="display: none; background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">Excluir</button>
-        </div>
-        <div class="image-wrapper">
-          <img src="" class="article-image" alt="Capa do projeto" />
-        </div>
-        <div class="article-body">
-          <div class="project-header">
-            <span class="category-tag">Iniciativa</span>
-          </div>
-          <h2 class="title"></h2>
-          <p class="excerpt"></p>
-          <div class="project-footer">
-            <span class="author">Por: <strong class="author-name"></strong></span>
-            <a class="btn-project read-more">Ver detalhes</a>
-          </div>
-        </div>
-      </article>
-    </template>
+          ">
+        <button class="author-edit-btn"
+          style="display: none; background: #f39c12; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">Editar</button>
+        <button class="admin-delete-btn"
+          style="display: none; background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">Excluir</button>
+      </div>
+      <img src="" class="article-image small" alt="Capa do projeto" />
+      <div class="article-body">
+        <span class="category-tag">Iniciativa</span>
+        <h3 class="title"></h3>
+        <p class="excerpt"></p>
+        <a class="read-more">Ver detalhes</a>
+      </div>
+    </article>
+  </template>
 
-    <script src="../components.js"></script>
-    <script src="../script.js"></script>
-    <script>
-      async function handleProjectDelete(id, cardElement) {
-        if (!confirm("Deseja realmente excluir este projeto?")) return;
-        
-        const currentUser = JSON.parse(sessionStorage.getItem("vozDaTerra_active_user"));
-        cardElement.style.opacity = "0.5";
+  <script src="../components.js"></script>
+  <script src="../script.js"></script>
+  <script>
+    async function handleProjectDelete(id, cardElement) {
+      if (!confirm("Deseja realmente excluir este projeto?")) return;
 
-        try {
-          const response = await fetch(API_URL, {
-            method: "POST",
-            redirect: "follow",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({
-              action: "DELETE",
-              table: "projetos",
-              id: id,
-              userEmail: currentUser.email
-            }),
+      const currentUser = JSON.parse(sessionStorage.getItem("vozDaTerra_active_user"));
+      cardElement.style.opacity = "0.5";
+
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          redirect: "follow",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            action: "DELETE",
+            table: "projetos",
+            id: id,
+            userEmail: currentUser.email
+          }),
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          cardElement.style.transform = "scale(0.9)";
+          cardElement.style.opacity = "0";
+          setTimeout(() => cardElement.remove(), 500);
+        } else {
+          throw new Error(result.error || "Erro ao excluir.");
+        }
+      } catch (error) {
+        alert("Erro: " + error.message);
+        cardElement.style.opacity = "1";
+      }
+    }
+
+    async function loadProjects() {
+      const container = document.getElementById("projects-container");
+      const template = document.getElementById("tpl-project");
+      const activeUser = JSON.parse(sessionStorage.getItem("vozDaTerra_active_user"));
+
+      try {
+        const projetos = await DataService.request({ table: "projetos" });
+        container.innerHTML = "";
+
+        if (!projetos || projetos.length === 0) {
+          container.innerHTML = "<p>Nenhum projeto encontrado.</p>";
+          return;
+        }
+
+        projetos.forEach(projeto => {
+          const id = projeto.id || projeto.Id || projeto.ID || projeto.index;
+          if (!id && id !== 0) return;
+
+          const clone = template.content.cloneNode(true);
+          const cardRoot = clone.querySelector(".article-card");
+
+          const fallbackImg = "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80";
+          clone.querySelector(".article-image").src = projeto.imagem || projeto.url_imagem || fallbackImg;
+          clone.querySelector(".title").textContent = projeto.titulo || "Sem título";
+          const tagEl = clone.querySelector(".category-tag");
+          if (tagEl) {
+            tagEl.textContent = projeto.tag || "Iniciativa";
+          }
+          clone.querySelector(".excerpt").textContent = (projeto.conteudo || "").substring(0, 120) + "...";
+
+          const readMoreBtn = clone.querySelector(".read-more");
+          readMoreBtn.addEventListener("click", () => {
+            sessionStorage.setItem("vozDaTerra_active_content_id", id);
+            window.location.href = "artigo.html?type=projetos";
           });
 
-          const result = await response.json();
-          if (result.success) {
-            cardElement.style.transform = "scale(0.9)";
-            cardElement.style.opacity = "0";
-            setTimeout(() => cardElement.remove(), 500);
-          } else {
-            throw new Error(result.error || "Erro ao excluir.");
-          }
-        } catch (error) {
-          alert("Erro: " + error.message);
-          cardElement.style.opacity = "1";
-        }
-      }
+          if (activeUser) {
+            const emailAutor = projeto.email_autor || projeto.emailAutor || "";
+            const isAdmin = activeUser.role === "admin";
+            const isOwner = String(activeUser.email).toLowerCase() === String(emailAutor).toLowerCase();
 
-      async function loadProjects() {
-        const container = document.getElementById("projects-container");
-        const template = document.getElementById("tpl-project");
-        const activeUser = JSON.parse(sessionStorage.getItem("vozDaTerra_active_user"));
+            if (isAdmin || isOwner) {
+              const delBtn = clone.querySelector(".admin-delete-btn");
+              delBtn.style.display = "block";
+              delBtn.addEventListener("click", () => handleProjectDelete(id, cardRoot));
 
-        try {
-          const projetos = await DataService.request({ table: "projetos" });
-          container.innerHTML = "";
-
-          if (!projetos || projetos.length === 0) {
-            container.innerHTML = "<p>Nenhum projeto encontrado.</p>";
-            return;
-          }
-
-          projetos.forEach(projeto => {
-            const id = projeto.id || projeto.Id || projeto.ID;
-            if (!id) return;
-
-            const clone = template.content.cloneNode(true);
-            const cardRoot = clone.querySelector(".article-card");
-            
-            const fallbackImg = "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80";
-            clone.querySelector(".article-image").src = projeto.imagem || projeto.url_imagem || fallbackImg;
-            clone.querySelector(".title").textContent = projeto.titulo || "Sem título";
-            clone.querySelector(".excerpt").textContent = (projeto.conteudo || "").substring(0, 120) + "...";
-            clone.querySelector(".author-name").textContent = projeto.autor || "Anônimo";
-
-            const readMoreBtn = clone.querySelector(".read-more");
-            readMoreBtn.addEventListener("click", () => {
-              sessionStorage.setItem("vozDaTerra_currentProjectId", id);
-              // Para simplificar, vou usar a mesma página de visualização ou uma similar
-              sessionStorage.setItem("vozDaTerra_currentArticleId", id); // Reuso a lógica de artigo se for igual
-              window.location.href = "artigo.html?type=projetos"; 
-            });
-
-            if (activeUser) {
-              const emailAutor = projeto.email_autor || projeto.emailAutor || "";
-              const isAdmin = activeUser.role === "admin";
-              const isOwner = String(activeUser.email).toLowerCase() === String(emailAutor).toLowerCase();
-
-              if (isAdmin || isOwner) {
-                const delBtn = clone.querySelector(".admin-delete-btn");
-                delBtn.style.display = "block";
-                delBtn.addEventListener("click", () => handleProjectDelete(id, cardRoot));
-
-                const editBtn = clone.querySelector(".author-edit-btn");
-                editBtn.style.display = "block";
-                editBtn.addEventListener("click", () => {
-                  sessionStorage.setItem("vozDaTerra_editArticleId", id);
-                  window.location.href = "editar-projeto.html";
-                });
-              }
+              const editBtn = clone.querySelector(".author-edit-btn");
+              editBtn.style.display = "block";
+              editBtn.addEventListener("click", () => {
+                sessionStorage.setItem("vozDaTerra_active_content_id", id);
+                window.location.href = "editar-projeto.html";
+              });
             }
+          }
 
-            container.appendChild(clone);
-          });
-        } catch (error) {
-          console.error(error);
-          container.innerHTML = "<p>Erro ao carregar projetos.</p>";
-        }
+          container.appendChild(clone);
+        });
+      } catch (error) {
+        console.error(error);
+        container.innerHTML = "<p>Erro ao carregar projetos.</p>";
       }
+    }
 
-      window.addEventListener("load", loadProjects);
-    </script>
-  </body>
+    window.addEventListener("load", loadProjects);
+  </script>
+</body>
+
 </html>

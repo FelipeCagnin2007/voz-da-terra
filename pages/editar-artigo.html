@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Voz da Terra - Editar Artigo</title>
+  <link rel="icon" type="image/png" href="../logo.png" />
     <link rel="stylesheet" href="../styles.css" />
   </head>
   <body>
@@ -78,6 +79,35 @@
               />
             </div>
 
+            <div style="margin-bottom: 20px">
+              <label
+                style="display: block; margin-bottom: 8px; font-weight: 600"
+                >Categoria (Tag)</label
+              >
+              <select
+                id="art-tag"
+                required
+                style="
+                  width: 100%;
+                  padding: 14px;
+                  border: 1px solid rgba(0, 0, 0, 0.1);
+                  border-radius: var(--border-radius-md);
+                  font-family: inherit;
+                  font-size: 1rem;
+                  outline: none;
+                  background: white;
+                "
+              >
+                <option value="Ecossistema">Ecossistema</option>
+                <option value="Mudança Climática">Mudança Climática</option>
+                <option value="Biodiversidade">Biodiversidade</option>
+                <option value="Opinião">Opinião</option>
+                <option value="Entrevista">Entrevista</option>
+                <option value="Ciência">Ciência</option>
+                <option value="Política">Política</option>
+              </select>
+            </div>
+
             <div style="margin-bottom: 30px">
               <label
                 style="display: block; margin-bottom: 8px; font-weight: 600"
@@ -149,7 +179,7 @@
       const activeUser = JSON.parse(
         sessionStorage.getItem("vozDaTerra_active_user")
       );
-      const editArticleId = sessionStorage.getItem("vozDaTerra_editArticleId");
+      const editArticleId = sessionStorage.getItem("vozDaTerra_active_content_id");
 
       // Controle de Dados Originais que não devem ser alterados pelo form
       let dataOriginal = "";
@@ -164,9 +194,11 @@
       window.addEventListener("load", async () => {
         try {
           const artigos = await DataService.request({ table: table });
-          const artigo = artigos.find(
-            (a) => String(a.id || a.ID || a.Id) === String(editArticleId)
-          );
+          const artigo = artigos.find(a => {
+            const currentId = String(a.id || a.Id || a.ID || a.index || "").trim();
+            const targetId = String(editArticleId || "").trim();
+            return currentId === targetId && targetId !== "";
+          });
 
           if (!artigo) throw new Error("Artigo não encontrado.");
 
@@ -188,6 +220,7 @@
             artigo.imagem || artigo.url_imagem || artigo.Imagem || "";
           document.getElementById("edit-conteudo").value =
             artigo.conteudo || artigo.Conteúdo || "";
+          document.getElementById("art-tag").value = artigo.tag || "Ecossistema";
 
           // Preserva os dados originais de autoria para injetar no payload depois
           dataOriginal =
@@ -220,6 +253,7 @@
           const conteudo = document
             .getElementById("edit-conteudo")
             .value.trim();
+          const tag = document.getElementById("art-tag").value;
 
           btn.disabled = true;
           btn.textContent = "Salvando...";
@@ -240,6 +274,7 @@
                 emailOriginal,
                 dataOriginal,
                 imagem,
+                tag
               ],
             };
 

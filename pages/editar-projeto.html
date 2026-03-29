@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Voz da Terra - Editar Projeto</title>
+  <link rel="icon" type="image/png" href="../logo.png" />
     <link rel="stylesheet" href="../styles.css" />
   </head>
   <body>
@@ -59,6 +60,32 @@
               />
             </div>
 
+            <div style="margin-bottom: 20px">
+              <label style="display: block; margin-bottom: 8px; font-weight: 600">Categoria (Tag)</label>
+              <select
+                id="proj-tag"
+                required
+                style="
+                  width: 100%;
+                  padding: 14px;
+                  border: 1px solid rgba(0, 0, 0, 0.1);
+                  border-radius: var(--border-radius-md);
+                  font-family: inherit;
+                  font-size: 1rem;
+                  outline: none;
+                  background: white;
+                "
+              >
+                <option value="Reflorestamento">Reflorestamento</option>
+                <option value="Preservação Fauna">Preservação Fauna</option>
+                <option value="Gestão Hídrica">Gestão Hídrica</option>
+                <option value="Educação Ambiental">Educação Ambiental</option>
+                <option value="Ecologia Urbana">Ecologia Urbana</option>
+                <option value="Inovação Verde">Inovação Verde</option>
+                <option value="Voluntariado">Voluntariado</option>
+              </select>
+            </div>
+
             <div style="margin-bottom: 30px">
               <label style="display: block; margin-bottom: 8px; font-weight: 600">Descrição do Projeto</label>
               <textarea
@@ -107,7 +134,7 @@
     <script src="../script.js"></script>
     <script>
       const activeUser = JSON.parse(sessionStorage.getItem("vozDaTerra_active_user"));
-      const editId = sessionStorage.getItem("vozDaTerra_editArticleId");
+      const editId = sessionStorage.getItem("vozDaTerra_active_content_id");
 
       let dataOriginal = "";
       let autorOriginal = "";
@@ -118,13 +145,18 @@
       window.addEventListener("load", async () => {
         try {
           const projetos = await DataService.request({ table: "projetos" });
-          const projeto = projetos.find(p => String(p.id || p.ID || p.Id) === String(editId));
+          const projeto = projetos.find(p => {
+            const currentId = String(p.id || p.Id || p.ID || p.index || "").trim();
+            const targetId = String(editId || "").trim();
+            return currentId === targetId && targetId !== "";
+          });
 
           if (!projeto) throw new Error("Projeto não encontrado.");
 
           document.getElementById("proj-titulo").value = projeto.titulo || "";
           document.getElementById("proj-imagem").value = projeto.imagem || projeto.url_imagem || "";
           document.getElementById("proj-conteudo").value = projeto.conteudo || "";
+          document.getElementById("proj-tag").value = projeto.tag || "Reflorestamento";
 
           dataOriginal = projeto.data || new Date().toLocaleDateString("pt-BR");
           autorOriginal = projeto.autor || "";
@@ -146,6 +178,7 @@
         const titulo = document.getElementById("proj-titulo").value.trim();
         const imagem = document.getElementById("proj-imagem").value.trim();
         const conteudo = document.getElementById("proj-conteudo").value.trim();
+        const tag = document.getElementById("proj-tag").value;
 
         btn.disabled = true;
         btn.textContent = "Salvando...";
@@ -157,7 +190,7 @@
             table: "projetos",
             id: editId,
             userEmail: activeUser.email,
-            values: [titulo, conteudo, autorOriginal, emailOriginal, dataOriginal, imagem],
+            values: [titulo, conteudo, autorOriginal, emailOriginal, dataOriginal, imagem, tag],
           };
 
           const response = await fetch(API_URL, {

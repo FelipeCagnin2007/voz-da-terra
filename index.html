@@ -1,43 +1,45 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Voz da Terra - Home</title>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div id="sidebar-placeholder"></div>
 
-    <main class="content">
-      <section class="feed-container">
-        <header class="blog-header">
-          <h1>Principais Artigos</h1>
-        </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Voz da Terra - Home</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
 
-        <div id="featured-container">
-          <p>Sincronizando artigos...</p>
-        </div>
+<body>
+  <div id="sidebar-placeholder"></div>
 
-        <div class="secondary-articles" id="secondary-container"></div>
-      </section>
-    </main>
+  <main class="content">
+    <section class="feed-container">
+      <header class="blog-header">
+        <h1>Principais Artigos</h1>
+        <p style="color: var(--text-light); margin-top: -10px; margin-bottom: 30px;">
+          Acompanhe os principais artigos sobre o meio ambiente.
+        </p>
+      </header>
 
-    <template id="tpl-featured">
-      <article class="article-card featured" style="position: relative">
-        <div
-          style="
+      <div id="featured-container">
+        <p>Sincronizando artigos...</p>
+      </div>
+
+      <div class="secondary-articles" id="secondary-container"></div>
+    </section>
+  </main>
+
+  <template id="tpl-featured">
+    <article class="article-card featured" style="position: relative">
+      <div style="
             position: absolute;
             top: 15px;
             right: 15px;
             display: flex;
             gap: 10px;
             z-index: 10;
-          "
-        >
-          <button
-            class="author-edit-btn"
-            style="
+          ">
+        <button class="author-edit-btn" style="
               display: none;
               background: #f39c12;
               color: white;
@@ -47,13 +49,10 @@
               font-weight: bold;
               cursor: pointer;
               box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            "
-          >
-            Editar
-          </button>
-          <button
-            class="admin-delete-btn"
-            style="
+            ">
+          Editar
+        </button>
+        <button class="admin-delete-btn" style="
               display: none;
               background: #e74c3c;
               color: white;
@@ -63,37 +62,32 @@
               font-weight: bold;
               cursor: pointer;
               box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            "
-          >
-            Excluir
-          </button>
-        </div>
+            ">
+          Excluir
+        </button>
+      </div>
 
-        <img src="" class="article-image" alt="Capa do artigo" />
-        <div class="article-body">
-          <span class="category-tag">Ecossistema</span>
-          <h2 class="title"></h2>
-          <p class="excerpt"></p>
-          <a class="read-more">Ler artigo completo →</a>
-        </div>
-      </article>
-    </template>
+      <img src="" class="article-image" alt="Capa do artigo" />
+      <div class="article-body">
+        <span class="category-tag">Ecossistema</span>
+        <h2 class="title"></h2>
+        <p class="excerpt"></p>
+        <a class="read-more">Ler artigo completo →</a>
+      </div>
+    </article>
+  </template>
 
-    <template id="tpl-secondary">
-      <article class="article-card" style="position: relative">
-        <div
-          style="
+  <template id="tpl-secondary">
+    <article class="article-card" style="position: relative">
+      <div style="
             position: absolute;
             top: 10px;
             right: 10px;
             display: flex;
             gap: 8px;
             z-index: 10;
-          "
-        >
-          <button
-            class="author-edit-btn"
-            style="
+          ">
+        <button class="author-edit-btn" style="
               display: none;
               background: #f39c12;
               color: white;
@@ -104,13 +98,10 @@
               font-weight: bold;
               cursor: pointer;
               box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            "
-          >
-            Editar
-          </button>
-          <button
-            class="admin-delete-btn"
-            style="
+            ">
+          Editar
+        </button>
+        <button class="admin-delete-btn" style="
               display: none;
               background: #e74c3c;
               color: white;
@@ -121,191 +112,200 @@
               font-weight: bold;
               cursor: pointer;
               box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            "
-          >
-            Excluir
-          </button>
-        </div>
+            ">
+          Excluir
+        </button>
+      </div>
 
-        <img src="" class="article-image small" alt="Miniatura" />
-        <div class="article-body">
-          <h3 class="title"></h3>
-          <a class="read-more">Ver mais</a>
-        </div>
-      </article>
-    </template>
+      <img src="" class="article-image small" alt="Miniatura" />
+      <div class="article-body">
+        <span class="category-tag">Ecossistema</span>
+        <h3 class="title"></h3>
+        <p class="excerpt"></p>
+        <a class="read-more">Ver mais</a>
+      </div>
+    </article>
+  </template>
 
-    <script src="components.js"></script>
-    <script src="script.js"></script>
-    <script>
-      async function handleAdminDelete(id, cardElement) {
-        if (
-          !confirm(
-            "Atenção: Deseja realmente excluir este artigo permanentemente?"
-          )
+  <script src="components.js"></script>
+  <script src="script.js"></script>
+  <script>
+    async function handleAdminDelete(id, cardElement) {
+      if (
+        !confirm(
+          "Atenção: Deseja realmente excluir este artigo permanentemente?"
         )
+      )
+        return;
+
+      const currentUser = JSON.parse(
+        sessionStorage.getItem("vozDaTerra_active_user")
+      );
+      cardElement.style.opacity = "0.5";
+
+      try {
+        const payload = {
+          action: "DELETE",
+          table: "artigos",
+          id: id,
+          userEmail: currentUser.email,
+        };
+
+        const response = await fetch(API_URL, {
+          method: "POST",
+          redirect: "follow",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8",
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          throw new Error("Falha na rede: " + response.status);
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+          cardElement.style.transition = "all 0.5s";
+          cardElement.style.transform = "scale(0.9)";
+          cardElement.style.opacity = "0";
+          setTimeout(() => cardElement.remove(), 500);
+        } else {
+          throw new Error(
+            result.error || "Falha ao excluir no banco de dados."
+          );
+        }
+      } catch (error) {
+        console.error("Erro no delete:", error);
+        alert("Erro: " + error.message);
+        cardElement.style.opacity = "1";
+      }
+    }
+
+    async function loadHomeContent() {
+      const featuredContainer = document.getElementById("featured-container");
+      const secondaryContainer = document.getElementById(
+        "secondary-container"
+      );
+      const tplFeatured = document.getElementById("tpl-featured");
+      const tplSecondary = document.getElementById("tpl-secondary");
+      const authMenuItem = document.getElementById("auth-menu-item");
+
+      let activeUser = null;
+      try {
+        const storedUser = sessionStorage.getItem("vozDaTerra_active_user");
+        if (storedUser) {
+          activeUser = JSON.parse(storedUser);
+        }
+      } catch (e) {
+        console.error("Erro ao ler sessão:", e);
+      }
+
+      try {
+        const artigos = await DataService.request({ table: "artigos" });
+
+        if (!artigos || artigos.length === 0) {
+          featuredContainer.innerHTML = "<p>Nenhum artigo encontrado.</p>";
           return;
+        }
 
-        const currentUser = JSON.parse(
-          sessionStorage.getItem("vozDaTerra_active_user")
-        );
-        cardElement.style.opacity = "0.5";
+        featuredContainer.innerHTML = "";
+        secondaryContainer.innerHTML = "";
 
-        try {
-          const payload = {
-            action: "DELETE",
-            table: "artigos",
-            id: id,
-            userEmail: currentUser.email,
-          };
+        artigos.forEach((artigo, index) => {
+          const id = artigo.id || artigo.Id || artigo.ID || artigo.index;
+          const titulo = artigo.titulo || artigo.Título || "Sem título";
+          const conteudo = artigo.conteudo || artigo.Conteúdo || "";
+          const emailAutor =
+            artigo.email_autor ||
+            artigo.emailAutor ||
+            artigo.Email_autor ||
+            "";
 
-          const response = await fetch(API_URL, {
-            method: "POST",
-            redirect: "follow",
-            headers: {
-              "Content-Type": "text/plain;charset=utf-8",
-            },
-            body: JSON.stringify(payload),
-          });
+          const fallbackImg =
+            "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=1200&q=80";
+          const urlImagem =
+            artigo.imagem ||
+            artigo.url_imagem ||
+            artigo.Imagem ||
+            fallbackImg;
 
-          if (!response.ok) {
-            throw new Error("Falha na rede: " + response.status);
+          if (!id) return;
+
+          const templateTarget = index === 0 ? tplFeatured : tplSecondary;
+          const clone = templateTarget.content.cloneNode(true);
+          const cardRoot = clone.querySelector(".article-card");
+
+          clone.querySelector(".article-image").src = urlImagem;
+          clone.querySelector(".title").textContent = titulo;
+          const tagEl = clone.querySelector(".category-tag");
+          if (tagEl) {
+            tagEl.textContent = artigo.tag || (index === 0 ? "Destaque" : "Geral");
           }
 
-          const result = await response.json();
-
-          if (result.success) {
-            cardElement.style.transition = "all 0.5s";
-            cardElement.style.transform = "scale(0.9)";
-            cardElement.style.opacity = "0";
-            setTimeout(() => cardElement.remove(), 500);
+          if (index === 0) {
+            clone.querySelector(".excerpt").textContent =
+              conteudo.substring(0, 150) + "...";
           } else {
-            throw new Error(
-              result.error || "Falha ao excluir no banco de dados."
-            );
-          }
-        } catch (error) {
-          console.error("Erro no delete:", error);
-          alert("Erro: " + error.message);
-          cardElement.style.opacity = "1";
-        }
-      }
-
-      async function loadHomeContent() {
-        const featuredContainer = document.getElementById("featured-container");
-        const secondaryContainer = document.getElementById(
-          "secondary-container"
-        );
-        const tplFeatured = document.getElementById("tpl-featured");
-        const tplSecondary = document.getElementById("tpl-secondary");
-        const authMenuItem = document.getElementById("auth-menu-item");
-
-        let activeUser = null;
-        try {
-          const storedUser = sessionStorage.getItem("vozDaTerra_active_user");
-          if (storedUser) {
-            activeUser = JSON.parse(storedUser);
-          }
-        } catch (e) {
-          console.error("Erro ao ler sessão:", e);
-        }
-
-        try {
-          const artigos = await DataService.request({ table: "artigos" });
-
-          if (!artigos || artigos.length === 0) {
-            featuredContainer.innerHTML = "<p>Nenhum artigo encontrado.</p>";
-            return;
+            clone.querySelector(".excerpt").textContent =
+              conteudo.substring(0, 75) + "...";
           }
 
-          featuredContainer.innerHTML = "";
-          secondaryContainer.innerHTML = "";
-
-          artigos.forEach((artigo, index) => {
-            const id = artigo.id || artigo.Id || artigo.ID || artigo.index;
-            const titulo = artigo.titulo || artigo.Título || "Sem título";
-            const conteudo = artigo.conteudo || artigo.Conteúdo || "";
-            const emailAutor =
-              artigo.email_autor ||
-              artigo.emailAutor ||
-              artigo.Email_autor ||
-              "";
-
-            const fallbackImg =
-              "https://images.unsplash.com/photo-1473448912268-2022ce9509d8?auto=format&fit=crop&w=1200&q=80";
-            const urlImagem =
-              artigo.imagem ||
-              artigo.url_imagem ||
-              artigo.Imagem ||
-              fallbackImg;
-
-            if (!id) return;
-
-            const templateTarget = index === 0 ? tplFeatured : tplSecondary;
-            const clone = templateTarget.content.cloneNode(true);
-            const cardRoot = clone.querySelector(".article-card");
-
-            clone.querySelector(".article-image").src = urlImagem;
-            clone.querySelector(".title").textContent = titulo;
-
-            if (index === 0) {
-              clone.querySelector(".excerpt").textContent =
-                conteudo.substring(0, 150) + "...";
-            }
-
-            const readMoreBtn = clone.querySelector(".read-more");
-            readMoreBtn.style.cursor = "pointer";
-            readMoreBtn.addEventListener("click", (e) => {
-              e.preventDefault();
-              sessionStorage.setItem("vozDaTerra_currentArticleId", id);
-              window.location.href = "pages/artigo.html";
-            });
-
-            // Gestão de Permissões (RBAC)
-            if (activeUser) {
-              // Permissão de Exclusão (Admin ou Autor)
-              if (
-                activeUser.role === "admin" ||
-                String(activeUser.email).toLowerCase() ===
-                  String(emailAutor).toLowerCase()
-              ) {
-                const deleteBtn = clone.querySelector(".admin-delete-btn");
-                deleteBtn.style.display = "block";
-                deleteBtn.addEventListener("click", (e) => {
-                  e.preventDefault();
-                  handleAdminDelete(id, cardRoot);
-                });
-              }
-
-              // Permissão de Edição (Autor ou Admin)
-              if (
-                String(activeUser.email).toLowerCase() ===
-                  String(emailAutor).toLowerCase() ||
-                activeUser.role === "admin"
-              ) {
-                const editBtn = clone.querySelector(".author-edit-btn");
-                editBtn.style.display = "block";
-                editBtn.addEventListener("click", (e) => {
-                  e.preventDefault();
-                  sessionStorage.setItem("vozDaTerra_editArticleId", id);
-                  window.location.href = "pages/editar-artigo.html";
-                });
-              }
-            }
-
-            if (index === 0) {
-              featuredContainer.appendChild(clone);
-            } else {
-              secondaryContainer.appendChild(clone);
-            }
+          const readMoreBtn = clone.querySelector(".read-more");
+          readMoreBtn.style.cursor = "pointer";
+          readMoreBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            sessionStorage.setItem("vozDaTerra_active_content_id", id);
+            window.location.href = "pages/artigo.html";
           });
-        } catch (err) {
-          console.error("Falha na carga do Index:", err);
-          featuredContainer.innerHTML = "<p>Erro ao conectar com a API.</p>";
-        }
-      }
 
-      window.addEventListener("load", loadHomeContent);
-    </script>
-  </body>
+          // Gestão de Permissões (RBAC)
+          if (activeUser) {
+            // Permissão de Exclusão (Admin ou Autor)
+            if (
+              activeUser.role === "admin" ||
+              String(activeUser.email).toLowerCase() ===
+              String(emailAutor).toLowerCase()
+            ) {
+              const deleteBtn = clone.querySelector(".admin-delete-btn");
+              deleteBtn.style.display = "block";
+              deleteBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                handleAdminDelete(id, cardRoot);
+              });
+            }
+
+            // Permissão de Edição (Autor ou Admin)
+            if (
+              String(activeUser.email).toLowerCase() ===
+              String(emailAutor).toLowerCase() ||
+              activeUser.role === "admin"
+            ) {
+              const editBtn = clone.querySelector(".author-edit-btn");
+              editBtn.style.display = "block";
+              editBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                sessionStorage.setItem("vozDaTerra_active_content_id", id);
+                window.location.href = "pages/editar-artigo.html";
+              });
+            }
+          }
+
+          if (index === 0) {
+            featuredContainer.appendChild(clone);
+          } else {
+            secondaryContainer.appendChild(clone);
+          }
+        });
+      } catch (err) {
+        console.error("Falha na carga do Index:", err);
+        featuredContainer.innerHTML = "<p>Erro ao conectar com a API.</p>";
+      }
+    }
+
+    window.addEventListener("load", loadHomeContent);
+  </script>
+</body>
+
 </html>
