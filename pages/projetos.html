@@ -19,9 +19,12 @@
         <p style="color: var(--text-light); margin-top: -10px; margin-bottom: 30px;">
           Conheça as iniciativas que estão fazendo a diferença.
         </p>
+
+        <div id="search-component-container"></div>
       </header>
 
       <div id="featured-project-container"></div>
+      
       <div id="projects-container" class="projects-grid">
         <p>Sincronizando projetos...</p>
       </div>
@@ -30,38 +33,11 @@
 
   <template id="tpl-featured-project">
     <article class="article-card featured" style="position: relative">
-      <div style="
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            display: flex;
-            gap: 10px;
-            z-index: 10;
-          ">
-        <button class="author-edit-btn" style="
-              display: none;
-              background: #f39c12;
-              color: white;
-              border: none;
-              padding: 8px 15px;
-              border-radius: 8px;
-              font-weight: bold;
-              cursor: pointer;
-              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            ">
+      <div style="position: absolute; top: 15px; right: 15px; display: flex; gap: 10px; z-index: 10;">
+        <button class="author-edit-btn" style="display: none; background: #f39c12; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
           Editar
         </button>
-        <button class="admin-delete-btn" style="
-              display: none;
-              background: #e74c3c;
-              color: white;
-              border: none;
-              padding: 8px 15px;
-              border-radius: 8px;
-              font-weight: bold;
-              cursor: pointer;
-              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            ">
+        <button class="admin-delete-btn" style="display: none; background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
           Excluir
         </button>
       </div>
@@ -78,18 +54,9 @@
 
   <template id="tpl-project">
     <article class="article-card" style="position: relative">
-      <div style="
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            display: flex;
-            gap: 8px;
-            z-index: 10;
-          ">
-        <button class="author-edit-btn"
-          style="display: none; background: #f39c12; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">Editar</button>
-        <button class="admin-delete-btn"
-          style="display: none; background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">Excluir</button>
+      <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 8px; z-index: 10;">
+        <button class="author-edit-btn" style="display: none; background: #f39c12; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">Editar</button>
+        <button class="admin-delete-btn" style="display: none; background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.2);">Excluir</button>
       </div>
       <img src="" class="article-image small" alt="Capa do projeto" />
       <div class="article-body">
@@ -104,10 +71,33 @@
   <script src="../components.js"></script>
   <script src="../script.js"></script>
   <script>
+    /**
+     * ============================================================================
+     * ESTADO E INICIALIZAÇÃO DA PÁGINA PROJETOS
+     * ============================================================================
+     */
+    let todosOsProjetos = [];
+    let activeUser = null;
+
+    function initUserSession() {
+      try {
+        const storedUser = sessionStorage.getItem("vozDaTerra_active_user");
+        if (storedUser) {
+          activeUser = JSON.parse(storedUser);
+        }
+      } catch (e) {
+        console.error("Erro ao ler sessão:", e);
+      }
+    }
+
+    /**
+     * ============================================================================
+     * LÓGICA DE EXCLUSÃO
+     * ============================================================================
+     */
     async function handleProjectDelete(id, cardElement) {
       if (!confirm("Deseja realmente excluir este projeto?")) return;
 
-      const currentUser = JSON.parse(sessionStorage.getItem("vozDaTerra_active_user"));
       cardElement.style.opacity = "0.5";
 
       try {
@@ -119,12 +109,13 @@
             action: "DELETE",
             table: "projetos",
             id: id,
-            userEmail: currentUser.email
+            userEmail: activeUser.email
           }),
         });
 
         const result = await response.json();
         if (result.success) {
+          cardElement.style.transition = "all 0.5s";
           cardElement.style.transform = "scale(0.9)";
           cardElement.style.opacity = "0";
           setTimeout(() => cardElement.remove(), 500);
@@ -137,87 +128,152 @@
       }
     }
 
-    async function loadProjects() {
+    /**
+     * ============================================================================
+     * CAMADA DE ACESSO A DADOS
+     * ============================================================================
+     */
+    async function fetchProjetos() {
+      try {
+        const projetos = await DataService.request({ table: "projetos" });
+        return projetos || [];
+      } catch (error) {
+        console.error(error);
+        return null;
+      }
+    }
+
+    /**
+     * ============================================================================
+     * CAMADA DE APRESENTAÇÃO
+     * ============================================================================
+     */
+    function renderProjetos(projetosParaRenderizar) {
       const container = document.getElementById("projects-container");
       const featuredContainer = document.getElementById("featured-project-container");
       const template = document.getElementById("tpl-project");
       const tplFeatured = document.getElementById("tpl-featured-project");
-      const activeUser = JSON.parse(sessionStorage.getItem("vozDaTerra_active_user"));
 
-      try {
-        const projetos = await DataService.request({ table: "projetos" });
-        container.innerHTML = "";
-        featuredContainer.innerHTML = "";
+      // Limpa os containers antes de renderizar
+      container.innerHTML = "";
+      featuredContainer.innerHTML = "";
 
-        if (!projetos || projetos.length === 0) {
-          container.innerHTML = "<p>Nenhum projeto encontrado.</p>";
-          return;
+      if (!projetosParaRenderizar || projetosParaRenderizar.length === 0) {
+        container.innerHTML = "<p>Nenhum projeto encontrado.</p>";
+        return;
+      }
+
+      const isOdd = projetosParaRenderizar.length % 2 !== 0;
+
+      projetosParaRenderizar.forEach((projeto, index) => {
+        const id = projeto.id || projeto.Id || projeto.ID || projeto.index;
+        if (!id && id !== 0) return;
+
+        const useFeatured = isOdd && index === 0;
+        const templateTarget = useFeatured ? tplFeatured : template;
+        const clone = templateTarget.content.cloneNode(true);
+        const cardRoot = clone.querySelector(".article-card");
+
+        const fallbackImg = "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80";
+        clone.querySelector(".article-image").src = projeto.imagem || projeto.url_imagem || fallbackImg;
+        clone.querySelector(".title").textContent = projeto.titulo || "Sem título";
+        
+        const tagEl = clone.querySelector(".category-tag");
+        if (tagEl) {
+          tagEl.textContent = projeto.tag || (useFeatured ? "Destaque" : "Iniciativa");
         }
 
-        const isOdd = projetos.length % 2 !== 0;
+        if (useFeatured) {
+          clone.querySelector(".excerpt").textContent = (projeto.conteudo || "").substring(0, 150) + "...";
+        } else {
+          clone.querySelector(".excerpt").textContent = (projeto.conteudo || "").substring(0, 120) + "...";
+        }
 
-        projetos.forEach((projeto, index) => {
-          const id = projeto.id || projeto.Id || projeto.ID || projeto.index;
-          if (!id && id !== 0) return;
-
-          const useFeatured = isOdd && index === 0;
-          const templateTarget = useFeatured ? tplFeatured : template;
-          const clone = templateTarget.content.cloneNode(true);
-          const cardRoot = clone.querySelector(".article-card");
-
-          const fallbackImg = "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=800&q=80";
-          clone.querySelector(".article-image").src = projeto.imagem || projeto.url_imagem || fallbackImg;
-          clone.querySelector(".title").textContent = projeto.titulo || "Sem título";
-          const tagEl = clone.querySelector(".category-tag");
-          if (tagEl) {
-            tagEl.textContent = projeto.tag || (useFeatured ? "Destaque" : "Iniciativa");
-          }
-
-          if (useFeatured) {
-            clone.querySelector(".excerpt").textContent = (projeto.conteudo || "").substring(0, 150) + "...";
-          } else {
-            clone.querySelector(".excerpt").textContent = (projeto.conteudo || "").substring(0, 120) + "...";
-          }
-
-          const readMoreBtn = clone.querySelector(".read-more");
-          readMoreBtn.addEventListener("click", () => {
-            sessionStorage.setItem("vozDaTerra_navigation_origin", "projects");
-            sessionStorage.setItem("vozDaTerra_active_content_id", id);
-            window.location.href = "artigo.html?type=projetos";
-          });
-          
-          if (activeUser) {
-            const emailAutor = projeto.email_autor || projeto.emailAutor || "";
-            const isAdmin = activeUser.role === "admin";
-            const isOwner = String(activeUser.email).toLowerCase() === String(emailAutor).toLowerCase();
-
-            if (isAdmin || isOwner) {
-              const delBtn = clone.querySelector(".admin-delete-btn");
-              delBtn.style.display = "block";
-              delBtn.addEventListener("click", () => handleProjectDelete(id, cardRoot));
-
-              const editBtn = clone.querySelector(".author-edit-btn");
-              editBtn.style.display = "block";
-              editBtn.addEventListener("click", () => {
-                sessionStorage.setItem("vozDaTerra_active_content_id", id);
-                window.location.href = "editar-projeto.html";
-              });
-            }
-          }
-
-          if (useFeatured) {
-            featuredContainer.appendChild(clone);
-          } else {
-            container.appendChild(clone);
-          }
+        const readMoreBtn = clone.querySelector(".read-more");
+        readMoreBtn.addEventListener("click", () => {
+          sessionStorage.setItem("vozDaTerra_navigation_origin", "projects");
+          sessionStorage.setItem("vozDaTerra_active_content_id", id);
+          window.location.href = "artigo.html?type=projetos";
         });
-      } catch (error) {
-        console.error(error);
-        container.innerHTML = "<p>Erro ao carregar projetos.</p>";
+        
+        // RBAC
+        if (activeUser) {
+          const emailAutor = projeto.email_autor || projeto.emailAutor || "";
+          const isAdmin = activeUser.role === "admin";
+          const isOwner = String(activeUser.email).toLowerCase() === String(emailAutor).toLowerCase();
+
+          if (isAdmin || isOwner) {
+            const delBtn = clone.querySelector(".admin-delete-btn");
+            delBtn.style.display = "block";
+            delBtn.addEventListener("click", () => handleProjectDelete(id, cardRoot));
+
+            const editBtn = clone.querySelector(".author-edit-btn");
+            editBtn.style.display = "block";
+            editBtn.addEventListener("click", () => {
+              sessionStorage.setItem("vozDaTerra_active_content_id", id);
+              window.location.href = "editar-projeto.html";
+            });
+          }
+        }
+
+        if (useFeatured) {
+          featuredContainer.appendChild(clone);
+        } else {
+          container.appendChild(clone);
+        }
+      });
+    }
+
+    /**
+     * ============================================================================
+     * CALLBACK DA BUSCA
+     * ============================================================================
+     */
+    function handlePesquisaProjetos(termoBuscado) {
+      if (!termoBuscado) {
+        renderProjetos(todosOsProjetos);
+        return;
+      }
+
+      const resultados = todosOsProjetos.filter(projeto => {
+        const titulo = (projeto.titulo || "").toLowerCase();
+        const conteudo = (projeto.conteudo || "").toLowerCase();
+        const tag = (projeto.tag || "").toLowerCase();
+        
+        return titulo.includes(termoBuscado) || 
+               conteudo.includes(termoBuscado) || 
+               tag.includes(termoBuscado);
+      });
+
+      renderProjetos(resultados);
+    }
+
+    /**
+     * ============================================================================
+     * BOOTSTRAP
+     * ============================================================================
+     */
+    async function initPage() {
+      initUserSession();
+
+      // Injeta o componente de busca instanciando a classe do components.js
+      new SearchComponent(
+        "search-component-container", 
+        "Pesquisar projetos por título, conteúdo ou tag...", 
+        handlePesquisaProjetos
+      );
+
+      const projetosBuscados = await fetchProjetos();
+      
+      if (projetosBuscados === null) {
+        document.getElementById("projects-container").innerHTML = "<p>Erro ao carregar projetos.</p>";
+      } else {
+        todosOsProjetos = projetosBuscados;
+        renderProjetos(todosOsProjetos);
       }
     }
 
-    window.addEventListener("load", loadProjects);
+    window.addEventListener("load", initPage);
   </script>
 </body>
 

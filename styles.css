@@ -693,3 +693,122 @@ nav ul li a.active {
   padding: 40px;
   color: var(--text-light);
 }
+
+/* --- 8. ORÁCULO ECOLÓGICO (CHAT IA) --- */
+
+.chat-container {
+  background: var(--white);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  height: 65vh;
+  min-height: 450px;
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  overflow: hidden; /* Garante que o input não vaze o border-radius */
+}
+
+.chat-history {
+  flex: 1;
+  padding: 25px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background-color: var(--white);
+}
+
+.message {
+  max-width: 85%;
+  padding: 14px 20px;
+  border-radius: var(--border-radius-md);
+  line-height: 1.6;
+  font-size: 1rem;
+  word-wrap: break-word;
+  box-shadow: var(--shadow-sm);
+}
+
+/* Mensagem do Usuário (Alinhada à direita) */
+.message.user {
+  align-self: flex-end;
+  background-color: var(--accent-green);
+  color: var(--white);
+  border-bottom-right-radius: 4px; /* Efeito de balão de fala */
+}
+
+/* Mensagem da IA (Alinhada à esquerda) */
+.message.bot {
+  align-self: flex-start;
+  background-color: #f8faf9;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  color: var(--text-main);
+  border-bottom-left-radius: 4px; /* Efeito de balão de fala */
+}
+
+.chat-input-wrapper {
+  display: flex;
+  padding: 20px;
+  background: var(--white);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  gap: 12px;
+}
+
+.chat-input-wrapper input {
+  flex: 1;
+  padding: 16px 20px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  outline: none;
+  transition: var(--transition);
+  background: #f8faf9;
+  color: var(--text-main);
+}
+
+.chat-input-wrapper input:focus {
+  border-color: var(--accent-green);
+  background: var(--white);
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
+}
+
+.chat-input-wrapper button {
+  background: var(--dark-green);
+  color: var(--white);
+  border: none;
+  padding: 0 30px;
+  border-radius: var(--border-radius-md);
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.chat-input-wrapper button:hover {
+  background: var(--accent-green);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.chat-input-wrapper button:disabled {
+  background: var(--text-light);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.loading-indicator {
+  display: none;
+  align-self: flex-start;
+  color: var(--text-light);
+  font-style: italic;
+  font-size: 0.9rem;
+  padding: 10px 15px;
+  background: transparent;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
+}

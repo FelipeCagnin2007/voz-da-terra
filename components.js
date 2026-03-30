@@ -1,5 +1,6 @@
 /**
  * Components.js - Shared UI components for Voz da Terra
+ * Centraliza a lógica de renderização e comportamento de componentes globais.
  */
 
 const Components = {
@@ -37,14 +38,11 @@ const Components = {
     if (activeUser) {
       authSectionButtons = `
       <li>
-      <a href="${relativePath}pages/criar-artigo.html" class="btn-create">+ Artigo</a>
+        <a href="${relativePath}pages/criar-artigo.html" class="btn-create">+ Artigo</a>
       </li>
       <li>
-      <a href="${relativePath}pages/criar-projeto.html" class="btn-create">+ Projeto</a>
+        <a href="${relativePath}pages/criar-projeto.html" class="btn-create">+ Projeto</a>
       </li>
-      `;
-    } else {
-      authSectionButtons = `
       `;
     }
 
@@ -62,10 +60,11 @@ const Components = {
             <ul>
               <li><a href="${relativePath}index.html" class="${currentPage === "index.html" ? "active" : ""}">Página Inicial</a></li>
               <li><a href="${relativePath}pages/projetos.html" class="${currentPage === "projetos.html" ? "active" : ""}">Projetos Ecológicos</a></li>
+              <li><a href="${relativePath}pages/gemini.html" class="${currentPage === "gemini.html" ? "active" : ""}">EcologIA</a></li>
               <li><a href="${relativePath}pages/dados.html" class="${currentPage === "dados.html" ? "active" : ""}">Pesquisa e Dados</a></li>
               ${authSectionButtons}
               <li>
-              <a href="${relativePath}aplicativo.apk" class="btn-app">Baixar APP</a>
+                <a href="${relativePath}aplicativo.apk" class="btn-app">Baixar APP</a>
               </li>
             </ul>
             <div class="sidebar-auth-mobile">
@@ -110,6 +109,65 @@ const Components = {
     });
   }
 };
+
+/**
+ * ============================================================================
+ * SearchComponent - Componente de busca reativo com Debounce integrado.
+ * ============================================================================
+ * Design Pattern: Observer/Callback. 
+ * O componente não sabe o que está sendo filtrado. Ele apenas captura a 
+ * intenção do usuário, otimiza as chamadas (debounce) e delega a ação.
+ */
+class SearchComponent {
+  /**
+   * @param {string} containerId - O ID da div onde o input será injetado.
+   * @param {string} placeholderText - O texto de dica (placeholder) do input.
+   * @param {Function} onSearchCallback - Função executada quando o usuário digita. Recebe o texto como parâmetro.
+   */
+  constructor(containerId, placeholderText, onSearchCallback) {
+    this.container = document.getElementById(containerId);
+    this.placeholderText = placeholderText;
+    this.onSearchCallback = onSearchCallback;
+    this.timeoutId = null;
+
+    if (this.container) {
+      this.render();
+      this.attachEvents();
+    } else {
+      console.warn(`SearchComponent: Não foi possível montar. Container '#${containerId}' não encontrado no DOM.`);
+    }
+  }
+
+  render() {
+    // Injeção de string template. Em um contexto com Vue.js, isso seria o bloco <template>.
+    this.container.innerHTML = `
+      <div class="search-box" style="margin-bottom: 30px;">
+        <input 
+          type="text" 
+          class="generic-search-input"
+          placeholder="${this.placeholderText}" 
+          style="width: 100%; max-width: 500px; padding: 12px 20px; border: 1px solid #ccc; border-radius: 8px; font-size: 1rem;"
+        />
+      </div>
+    `;
+  }
+
+  attachEvents() {
+    const input = this.container.querySelector('.generic-search-input');
+    if (!input) return;
+
+    input.addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase().trim();
+      
+      // Implementação de Debounce para mitigar concorrência pesada na thread principal
+      clearTimeout(this.timeoutId);
+      
+      this.timeoutId = setTimeout(() => {
+        this.onSearchCallback(searchTerm);
+      }, 300); // 300ms é o "sweet spot" ideal entre reatividade e economia de CPU
+    });
+  }
+}
 
 // Initialize sidebar if placeholder exists
 document.addEventListener("DOMContentLoaded", () => {
