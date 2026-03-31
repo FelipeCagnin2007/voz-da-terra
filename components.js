@@ -12,8 +12,11 @@ const Components = {
     const placeholder = document.getElementById("sidebar-placeholder");
     if (!placeholder) return;
 
-    const currentPage = window.location.pathname.split("/").pop() || "index.html";
-    const activeUser = JSON.parse(sessionStorage.getItem("vozDaTerra_active_user"));
+    const currentPage =
+      window.location.pathname.split("/").pop() || "index.html";
+    const activeUser = JSON.parse(
+      sessionStorage.getItem("vozDaTerra_active_user")
+    );
 
     let authSection = "";
     if (activeUser) {
@@ -58,10 +61,18 @@ const Components = {
           </button>
           <nav class="nav-menu" id="nav-menu">
             <ul>
-              <li><a href="${relativePath}index.html" class="${currentPage === "index.html" ? "active" : ""}">Página Inicial</a></li>
-              <li><a href="${relativePath}pages/projetos.html" class="${currentPage === "projetos.html" ? "active" : ""}">Projetos Ecológicos</a></li>
-              <li><a href="${relativePath}pages/gemini.html" class="${currentPage === "gemini.html" ? "active" : ""}">EcologIA</a></li>
-              <li><a href="${relativePath}pages/dados.html" class="${currentPage === "dados.html" ? "active" : ""}">Pesquisa e Dados</a></li>
+              <li><a href="${relativePath}index.html" class="${
+      currentPage === "index.html" ? "active" : ""
+    }">Página Inicial</a></li>
+              <li><a href="${relativePath}pages/projetos.html" class="${
+      currentPage === "projetos.html" ? "active" : ""
+    }">Projetos Ecológicos</a></li>
+              <li><a href="${relativePath}pages/dados.html" class="${
+      currentPage === "dados.html" ? "active" : ""
+    }">Pesquisa e Dados</a></li>
+    <li><a href="${relativePath}pages/gemini.html" class="${
+      currentPage === "gemini.html" ? "active" : ""
+    }">EcologIA</a></li>
               ${authSectionButtons}
               <li>
                 <a href="${relativePath}aplicativo.apk" class="btn-app">Baixar APP</a>
@@ -107,15 +118,15 @@ const Components = {
         window.location.reload();
       });
     });
-  }
+  },
 };
 
 /**
  * ============================================================================
  * SearchComponent - Componente de busca reativo com Debounce integrado.
  * ============================================================================
- * Design Pattern: Observer/Callback. 
- * O componente não sabe o que está sendo filtrado. Ele apenas captura a 
+ * Design Pattern: Observer/Callback.
+ * O componente não sabe o que está sendo filtrado. Ele apenas captura a
  * intenção do usuário, otimiza as chamadas (debounce) e delega a ação.
  */
 class SearchComponent {
@@ -134,7 +145,9 @@ class SearchComponent {
       this.render();
       this.attachEvents();
     } else {
-      console.warn(`SearchComponent: Não foi possível montar. Container '#${containerId}' não encontrado no DOM.`);
+      console.warn(
+        `SearchComponent: Não foi possível montar. Container '#${containerId}' não encontrado no DOM.`
+      );
     }
   }
 
@@ -153,15 +166,15 @@ class SearchComponent {
   }
 
   attachEvents() {
-    const input = this.container.querySelector('.generic-search-input');
+    const input = this.container.querySelector(".generic-search-input");
     if (!input) return;
 
-    input.addEventListener('input', (e) => {
+    input.addEventListener("input", (e) => {
       const searchTerm = e.target.value.toLowerCase().trim();
-      
+
       // Implementação de Debounce para mitigar concorrência pesada na thread principal
       clearTimeout(this.timeoutId);
-      
+
       this.timeoutId = setTimeout(() => {
         this.onSearchCallback(searchTerm);
       }, 300); // 300ms é o "sweet spot" ideal entre reatividade e economia de CPU

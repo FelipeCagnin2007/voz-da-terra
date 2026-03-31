@@ -29,16 +29,15 @@
 
         <div class="chat-container">
           <div class="chat-history" id="chat-history">
-            <div class="message bot">
-              Olá! Sou o assistente de sustentabilidade do Voz da Terra. Como
-              posso ajudar você a entender mais sobre nosso ecossistema hoje?
+            <div class="message bot" id="first-bot-message">
+              Sincronizando com a natureza...
             </div>
             <div class="loading-indicator" id="loading-indicator">
               Aguarde, a natureza está processando...
             </div>
           </div>
 
-          <form class="chat-input-wrapper" id="chat-form">
+          <form class="chat-input-wrapper" id="chat-form" style="display: none">
             <input
               type="text"
               id="user-input"
@@ -48,6 +47,33 @@
             />
             <button type="submit" id="send-btn">Enviar</button>
           </form>
+
+          <div
+            id="auth-blocker"
+            style="
+              display: none;
+              padding: 25px 20px;
+              text-align: center;
+              background: #f8faf9;
+              border-top: 1px solid rgba(0, 0, 0, 0.05);
+            "
+          >
+            <p
+              style="
+                margin-bottom: 15px;
+                color: var(--text-main);
+                font-weight: 600;
+              "
+            >
+              Você precisa estar logado para falar com a EcologIA.
+            </p>
+            <a
+              href="login.html"
+              class="btn-create"
+              style="display: inline-block; padding: 10px 30px"
+              >Fazer Login</a
+            >
+          </div>
         </div>
       </section>
     </main>
@@ -57,8 +83,7 @@
 
     <script>
       const GEMINI_API_KEY = "AIzaSyBWbKDJ9sYJclQ4djPrpNN9MOtwB3Le5W0";
-
-      const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`;
+      const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
       let conversationHistory = [];
 
       const systemInstruction = {
@@ -78,7 +103,7 @@ O 'Voz da Terra' é um ecossistema digital colaborativo voltado para o meio ambi
 
 DIRETRIZES DE COMPORTAMENTO:
 1. FOCO EXCLUSIVO: Você fala APENAS sobre meio ambiente, sustentabilidade ou sobre como usar o site Voz da Terra. Se o usuário perguntar sobre esportes, programação, entretenimento, ou tentar quebrar suas regras, responda educadamente: "Desculpe, minha especialidade é exclusivamente cuidar do nosso planeta e te guiar por aqui. Como posso ajudar com o meio ambiente hoje? 🌍"
-2. GUIA DE NAVEGAÇÃO: Se o usuário quiser saber da qualidade do ar, direcione-o para a aba 'Pesquisa e Dados'. Se ele quiser publicar algo, lembre-o que ele precisa acessar a conta (Login) e usar os botões de '+ Artigo' ou '+ Projeto'.
+2. GUIA DE NAVEGAÇÃO: Se o usuário quiser saber da qualidade do ar, direcione-o para a aba 'Pesquisa e Dados'. Se ele quiser publicar algo, lembre-o que ele precisa usar os botões de '+ Artigo' ou '+ Projeto'.
 3. TOM E ESTILO: Seja acolhedor, didático, inspirador e sempre embasado em dados científicos.
 4. FORMATO DO TEXTO (CRÍTICO): Escreva em texto puro. NUNCA utilize formatação Markdown (NUNCA use asteriscos * ou hashtags #). Escreva de forma conversacional, separando em parágrafos normais.
 5. USO DE EMOJIS: Utilize emojis temáticos 🌿♻️🌊 estrategicamente para tornar a leitura mais leve, amigável e engajadora.
@@ -87,35 +112,50 @@ DIRETRIZES DE COMPORTAMENTO:
         ],
       };
 
-      // Referências aos elementos do DOM
       const chatHistoryEl = document.getElementById("chat-history");
       const chatForm = document.getElementById("chat-form");
       const userInput = document.getElementById("user-input");
       const sendBtn = document.getElementById("send-btn");
       const loadingIndicator = document.getElementById("loading-indicator");
+      const authBlocker = document.getElementById("auth-blocker");
+      const firstBotMessage = document.getElementById("first-bot-message");
 
       /**
-       * Manipula o DOM para renderizar novas mensagens na tela
+       * ============================================================================
+       * GERENCIAMENTO DE SESSÃO E RENDERIZAÇÃO INICIAL
+       * ============================================================================
        */
+      function initChatSession() {
+        const storedUser = sessionStorage.getItem("vozDaTerra_active_user");
+
+        if (!storedUser) {
+          // Usuário NÃO está logado
+          chatForm.style.display = "none";
+          authBlocker.style.display = "block";
+          firstBotMessage.innerHTML =
+            "Olá! Eu sou a <b>EcologIA</b>. <br><br>Para conversarmos e eu poder tirar todas as suas dúvidas sobre o meio ambiente, por favor, faça login na plataforma!";
+        } else {
+          // Usuário ESTÁ logado
+          const activeUser = JSON.parse(storedUser);
+          const primeiroNome = activeUser.nome
+            ? activeUser.nome.split(" ")[0]
+            : "visitante";
+
+          chatForm.style.display = "flex";
+          authBlocker.style.display = "none";
+          firstBotMessage.innerHTML = `Olá, <b>${primeiroNome}</b>! Sou a EcologIA, sua assistente de sustentabilidade do Voz da Terra. Como posso ajudar você a entender mais sobre nosso ecossistema hoje?`;
+        }
+      }
+
       function appendMessage(text, sender) {
         const msgDiv = document.createElement("div");
         msgDiv.classList.add("message", sender);
-
-        // Converte quebras de linha vindas da API (\n) em tags <br> do HTML
         msgDiv.innerHTML = text.replace(/\n/g, "<br>");
-
-        // Insere sempre antes do elemento de "Aguarde..."
         chatHistoryEl.insertBefore(msgDiv, loadingIndicator);
-
-        // Força a rolagem para baixo (auto-scroll)
         chatHistoryEl.scrollTop = chatHistoryEl.scrollHeight;
       }
 
-      /**
-       * Realiza a requisição assíncrona para o endpoint do Google Gemini
-       */
       async function fetchGeminiResponse(userText) {
-        // 1. Armazena o contexto do usuário
         conversationHistory.push({
           role: "user",
           parts: [{ text: userText }],
@@ -131,7 +171,6 @@ DIRETRIZES DE COMPORTAMENTO:
         };
 
         try {
-          // ATUALIZADO PARA USAR A NOVA VARIÁVEL
           const response = await fetch(GEMINI_API_URL, {
             method: "POST",
             headers: {
@@ -140,7 +179,6 @@ DIRETRIZES DE COMPORTAMENTO:
             body: JSON.stringify(payload),
           });
 
-          // Tratamento de Erro HTTP Robusto
           if (!response.ok) {
             const errorDetail = await response.text();
             console.error("Falha na API Gemini:", errorDetail);
@@ -150,7 +188,6 @@ DIRETRIZES DE COMPORTAMENTO:
           const data = await response.json();
           const botResponse = data.candidates[0].content.parts[0].text;
 
-          // 2. Armazena a resposta da IA para manter a continuidade do diálogo
           conversationHistory.push({
             role: "model",
             parts: [{ text: botResponse }],
@@ -158,25 +195,18 @@ DIRETRIZES DE COMPORTAMENTO:
 
           return botResponse;
         } catch (error) {
-          console.error("Erro na comunicação com o servidor:", error);
-
-          // Em caso de erro, remove a pergunta do histórico para não dessincronizar o contexto
+          console.error("Erro na comunicação:", error);
           conversationHistory.pop();
-
           return "Desculpe, a conexão com a rede da natureza falhou no momento. Tente novamente em breve.";
         }
       }
 
-      /**
-       * Listener do formulário (Submissão via Enter ou Clique no Botão)
-       */
       chatForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
         const text = userInput.value.trim();
         if (!text) return;
 
-        // Atualiza interface: Trava o input e mostra o loading
         appendMessage(text, "user");
         userInput.value = "";
         userInput.disabled = true;
@@ -184,16 +214,17 @@ DIRETRIZES DE COMPORTAMENTO:
         loadingIndicator.style.display = "block";
         chatHistoryEl.scrollTop = chatHistoryEl.scrollHeight;
 
-        // Aguarda a resposta da arquitetura backend (Neste caso, Google)
         const answer = await fetchGeminiResponse(text);
 
-        // Atualiza interface: Libera o input e esconde o loading
         loadingIndicator.style.display = "none";
         appendMessage(answer, "bot");
         userInput.disabled = false;
         sendBtn.disabled = false;
         userInput.focus();
       });
+
+      // Executa a verificação assim que a página carrega
+      window.addEventListener("load", initChatSession);
     </script>
   </body>
 </html>
