@@ -30,7 +30,7 @@ export const Layout = ({ children }) => {
     <>
       <div className="sidebar-top">
         <div className="logo">
-          <img src="../../public/logo.png" alt="logo" />
+          <img src="/logo.png" alt="logo" />
           <div>VOZ DA<br />TERRA</div>
         </div>
 
