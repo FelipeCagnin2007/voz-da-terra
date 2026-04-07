@@ -30,12 +30,12 @@ export const Layout = ({ children }) => {
     <>
       <div className="sidebar-top">
         <div className="logo">
-          <img src="/logo.png" alt="logo" />
+          <img src="../../public/logo.png" alt="logo" />
           <div>VOZ DA<br />TERRA</div>
         </div>
-        
-        <button 
-          className={`hamburger ${isMenuOpen ? 'active' : ''}`} 
+
+        <button
+          className={`hamburger ${isMenuOpen ? 'active' : ''}`}
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <span></span><span></span><span></span>
@@ -45,8 +45,8 @@ export const Layout = ({ children }) => {
           <ul>
             {navLinks.map((link) => (
               <li key={link.path}>
-                <Link 
-                  to={link.path} 
+                <Link
+                  to={link.path}
                   className={location.pathname === link.path ? 'active' : ''}
                   onClick={() => setIsMenuOpen(false)}
                 >
@@ -54,7 +54,7 @@ export const Layout = ({ children }) => {
                 </Link>
               </li>
             ))}
-            
+
             {user && (
               <>
                 <li>
@@ -69,7 +69,7 @@ export const Layout = ({ children }) => {
                 </li>
               </>
             )}
-            
+
             <li>
               <a href="/aplicativo.apk" className="btn-app">Baixar APP</a>
             </li>
@@ -120,7 +120,7 @@ export const Layout = ({ children }) => {
       <aside className="sidebar">
         <SidebarContent />
       </aside>
-      
+
       <main className="content">
         {children}
       </main>
