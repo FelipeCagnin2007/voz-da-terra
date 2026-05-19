@@ -205,42 +205,56 @@ nav ul li a.active {
     background: rgba(255, 255, 255, 0.95);
     border-right: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    transition: height 0.3s ease;
+    z-index: 1000;
+  }
+
+  .sidebar.menu-open {
+    height: 100dvh;
   }
 
   .sidebar-top {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr;
+    height: 100%;
     align-items: center;
+  }
+
+  .logo {
+    grid-column: 1;
+    grid-row: 1;
+    margin-bottom: 0;
   }
 
   .hamburger {
     display: flex;
+    grid-column: 2;
+    grid-row: 1;
   }
 
   .nav-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    background: var(--white);
-    height: calc(100dvh - 70px);
-    overflow-y: auto;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    height: 0;
+    min-height: 0; /* Crucial for Grid overflow containment */
+    overflow: hidden;
     opacity: 0;
-    pointer-events: none;
     visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-    overscroll-behavior: none;
-    -webkit-overflow-scrolling: touch;
-    padding: 20px 0 60px 0;
+    background: transparent;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    box-shadow: none;
   }
 
   .nav-menu.active {
+    height: 100%;
     opacity: 1;
-    pointer-events: auto;
     visibility: visible;
-    transform: translateY(0);
+    overflow-y: auto;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    padding-top: 20px;
+    padding-bottom: 40px;
   }
 
   .nav-menu ul li a {

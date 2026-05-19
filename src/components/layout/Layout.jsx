@@ -120,7 +120,7 @@ export const Layout = ({ children }) => {
 
   return (
     <>
-      <aside className="sidebar">
+      <aside className={`sidebar ${isMenuOpen ? 'menu-open' : ''}`}>
         <SidebarContent />
       </aside>
 
