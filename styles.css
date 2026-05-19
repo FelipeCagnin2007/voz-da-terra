@@ -223,16 +223,24 @@ nav ul li a.active {
     left: 0;
     width: 100%;
     background: var(--white);
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    height: calc(100dvh - 70px);
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px 0 60px 0;
   }
 
   .nav-menu.active {
-    max-height: calc(100dvh - 75px);
-    padding: 20px 0;
-    overflow-y: auto;
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+    transform: translateY(0);
   }
 
   .nav-menu ul li a {
