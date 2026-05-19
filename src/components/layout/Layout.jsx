@@ -71,10 +71,10 @@ export const Layout = ({ children }) => {
             )}
 
             <li>
-              <a href="/aplicativo.apk" className="btn-app">Baixar APP</a>
+              <a href="/aplicativo.apk" className="btn-app" download>Baixar APP</a>
             </li>
             <li>
-              <a href="/cartilha.pdf" className="btn-app" target="_blank" rel="noopener noreferrer">Baixar Cartilha</a>
+              <a href="/cartilha.pdf" className="btn-app" target="_blank" rel="noopener noreferrer" download>Baixar Cartilha</a>
             </li>
           </ul>
 
