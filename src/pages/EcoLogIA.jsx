@@ -179,14 +179,15 @@ export const EcoLogIA = () => {
                   background: 'var(--dark-green)',
                   color: 'white',
                   border: 'none',
-                  padding: '0 25px',
+                  padding: '0 20px',
                   borderRadius: '12px',
                   fontWeight: 800,
+                  fontSize: '1.2rem',
                   cursor: isLoading ? 'wait' : 'pointer'
                 }}
                 disabled={isLoading}
               >
-                Enviar 🌿
+                🌿
               </button>
             </form>
           ) : (

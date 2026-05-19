@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useArticles } from '../hooks/useArticles'
 import { useAuthContext } from '../context/AuthContext'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export const Home = () => {
   const { articles, loading, fetchArticles, deleteArticle } = useArticles()
   const { user } = useAuthContext()
   const [searchTerm, setSearchTerm] = useState('')
+  const navigate = useNavigate()
 
   useEffect(() => {
     fetchArticles()
@@ -20,10 +21,16 @@ export const Home = () => {
 
   const handleDelete = async (id, e) => {
     e.preventDefault()
+    e.stopPropagation()
     if (window.confirm("Deseja realmente excluir este artigo?")) {
       const { error } = await deleteArticle(id)
       if (!error) fetchArticles(searchTerm)
     }
+  }
+
+  const handleArticleClick = (e, id) => {
+    if (e.target.closest('a') || e.target.closest('button')) return;
+    navigate(`/article/${id}?type=article`);
   }
 
   // Logic to separate featured and secondary
@@ -65,7 +72,11 @@ export const Home = () => {
         <div className="articles-list">
           {/* 1. FEATURED ARTICLE (O primeiro da lista) */}
           {featuredArticle && (
-             <article className="article-card featured" style={{ position: 'relative' }}>
+             <article 
+                className="article-card featured" 
+                style={{ position: 'relative', cursor: 'pointer' }}
+                onClick={(e) => handleArticleClick(e, featuredArticle.id)}
+             >
                 <div style={{ position: 'absolute', top: '15px', right: '15px', display: 'flex', gap: '10px', zIndex: 10 }}>
                   {(user && (user.email === featuredArticle.usuarios?.email || user.user_metadata?.role === 'admin')) && (
                     <>
@@ -110,7 +121,12 @@ export const Home = () => {
                 const isAdmin = user && user.user_metadata?.role === 'admin'
 
                 return (
-                  <article key={article.id} className="article-card" style={{ position: 'relative' }}>
+                  <article 
+                    key={article.id} 
+                    className="article-card" 
+                    style={{ position: 'relative', cursor: 'pointer' }}
+                    onClick={(e) => handleArticleClick(e, article.id)}
+                  >
                     <div style={{ position: 'absolute', top: '15px', right: '15px', display: 'flex', gap: '5px', zIndex: 10 }}>
                       {(isOwner || isAdmin) && (
                         <>

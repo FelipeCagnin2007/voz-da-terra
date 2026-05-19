@@ -77,6 +77,9 @@ const Components = {
               <li>
                 <a href="${relativePath}aplicativo.apk" class="btn-app">Baixar APP</a>
               </li>
+              <li>
+                <a href="${relativePath}cartilha.pdf" class="btn-app" target="_blank" rel="noopener noreferrer">Baixar Cartilha</a>
+              </li>
             </ul>
             <div class="sidebar-auth-mobile">
               ${authSection}

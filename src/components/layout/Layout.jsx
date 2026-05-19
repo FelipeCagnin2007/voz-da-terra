@@ -73,6 +73,9 @@ export const Layout = ({ children }) => {
             <li>
               <a href="/aplicativo.apk" className="btn-app">Baixar APP</a>
             </li>
+            <li>
+              <a href="/cartilha.pdf" className="btn-app" target="_blank" rel="noopener noreferrer">Baixar Cartilha</a>
+            </li>
           </ul>
 
           <div className="sidebar-auth-mobile">

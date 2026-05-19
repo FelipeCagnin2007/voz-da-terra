@@ -13,6 +13,7 @@ export const ContentDetail = () => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    window.scrollTo(0, 0)
     const fetchContent = async () => {
       const table = contentType === 'article' ? 'artigos' : 'projetos'
       try {

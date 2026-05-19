@@ -217,13 +217,14 @@ export const Chat = () => {
                   background: 'var(--dark-green)', 
                   color: 'white', 
                   border: 'none', 
-                  padding: '0 25px', 
+                  padding: '0 20px', 
                   borderRadius: '12px', 
                   fontWeight: 800, 
+                  fontSize: '1.2rem',
                   cursor: sending ? 'wait' : 'pointer' 
                 }}
               >
-                Enviar 🌿
+                🌿
               </button>
             </form>
           ) : (
