@@ -230,7 +230,7 @@ nav ul li a.active {
   }
 
   .nav-menu.active {
-    max-height: calc(100vh - 75px);
+    max-height: calc(100dvh - 75px);
     padding: 20px 0;
     overflow-y: auto;
   }

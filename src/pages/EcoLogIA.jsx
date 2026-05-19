@@ -25,8 +25,15 @@ export const EcoLogIA = () => {
     setConversationHistory(updatedHistory)
 
     const payload = {
+      systemInstruction: {
+        parts: [
+          {
+            text: "Você é a EcologIA, uma assistente virtual especializada em ecologia, meio ambiente, sustentabilidade e conservação da natureza. O seu objetivo é ajudar a educar as pessoas sobre a importância da preservação ambiental. Você deve responder APENAS a perguntas relacionadas a esses temas (como biologia, natureza, reciclagem, clima, animais, plantas, etc). Se o usuário perguntar sobre qualquer outro assunto fora desse escopo (como programação, esportes, política, etc), recuse-se a responder de forma educada, explicando que você é uma IA focada exclusivamente no meio ambiente."
+          }
+        ]
+      },
       contents: updatedHistory,
-      generationConfig: { temperature: 0.7, maxOutputTokens: 1024 },
+      generationConfig: { temperature: 0.7 },
     }
 
     try {
@@ -141,9 +148,10 @@ export const EcoLogIA = () => {
                   }}
                 >
                   <p
-                    style={{ margin: 0, lineHeight: '1.5', fontSize: '1rem' }}
-                    dangerouslySetInnerHTML={{ __html: m.text.replace(/\n/g, '<br>') }}
-                  ></p>
+                    style={{ margin: 0, lineHeight: '1.5', fontSize: '1rem', wordBreak: 'break-word', overflowWrap: 'anywhere', whiteSpace: 'pre-wrap' }}
+                  >
+                    {m.text}
+                  </p>
                   <div style={{ textAlign: 'right', marginTop: '5px', fontSize: '0.65rem', opacity: 0.7 }}>
                     {m.time}
                   </div>

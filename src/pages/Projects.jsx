@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { useProjects } from '../hooks/useProjects'
 import { useAuthContext } from '../context/AuthContext'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 export const Projects = () => {
   const { projects, loading, fetchProjects, deleteProject } = useProjects()
   const { user } = useAuthContext()
+  const navigate = useNavigate()
+
+  const handleProjectClick = (e, id) => {
+    if (e.target.closest('a') || e.target.closest('button')) return;
+    navigate(`/article/${id}?type=project`);
+  }
 
   useEffect(() => {
     fetchProjects()
@@ -40,7 +46,11 @@ export const Projects = () => {
         <div className="articles-list">
           {/* 1. FEATURED PROJECT (Identical to featured article) */}
           {featuredProject && (
-             <article className="article-card featured" style={{ position: 'relative' }}>
+             <article 
+                className="article-card featured" 
+                style={{ position: 'relative', cursor: 'pointer' }}
+                onClick={(e) => handleProjectClick(e, featuredProject.id)}
+             >
                 <div style={{ position: 'absolute', top: '15px', right: '15px', display: 'flex', gap: '10px', zIndex: 10 }}>
                   {(user && (user.id === featuredProject.autor_id || user.user_metadata?.role === 'admin')) && (
                     <>
@@ -85,7 +95,12 @@ export const Projects = () => {
                 const isAdmin = user && user.user_metadata?.role === 'admin'
 
                 return (
-                  <article key={project.id} className="article-card" style={{ position: 'relative' }}>
+                  <article 
+                    key={project.id} 
+                    className="article-card" 
+                    style={{ position: 'relative', cursor: 'pointer' }}
+                    onClick={(e) => handleProjectClick(e, project.id)}
+                  >
                     <div style={{ position: 'absolute', top: '15px', right: '15px', display: 'flex', gap: '5px', zIndex: 10 }}>
                       {(isOwner || isAdmin) && (
                         <>
