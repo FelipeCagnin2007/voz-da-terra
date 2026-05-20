@@ -197,7 +197,8 @@ nav ul li a.active {
 
   .sidebar {
     width: 100%;
-    padding: 0; /* Removed padding to let flexbox handle sizing cleanly */
+    height: auto;
+    padding: 15px 25px;
     position: sticky;
     top: 0;
     backdrop-filter: blur(15px);
@@ -206,69 +207,62 @@ nav ul li a.active {
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     transition: height 0.3s ease;
     z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    max-height: 100dvh; /* Strictly bound to screen */
   }
 
   .sidebar.menu-open {
     height: 100dvh;
-    background: #ffffff; /* Fundo sólido para cobrir a página */
-    overflow: hidden;
+    overflow: hidden; /* Prevent body scroll bleed */
   }
 
   .sidebar-top {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0; /* Essencial para permitir o scroll interno no flex */
-    width: 100%;
-  }
-
-  .sidebar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 25px; /* Padding movido do .sidebar para o header */
-    flex-shrink: 0; /* O header nunca deve ser esmagado */
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+    min-height: 0; /* CRITICAL: prevents grid from expanding infinitely in flex parent */
   }
 
   .logo {
-    margin-bottom: 0; /* Sobrescreve margem do desktop */
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    margin-bottom: 0; /* Override desktop margin */
   }
 
   .hamburger {
     display: flex;
+    grid-column: 2;
+    grid-row: 1;
+    align-self: center;
   }
 
   .nav-menu {
-    flex: 1; /* Ocupa o restante do espaço vertical */
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    
-    /* Estado Fechado */
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: block; /* CRITICAL: removes flex column so children don't shrink */
+    height: 0;
+    min-height: 0; /* CRITICAL: prevents grid item from expanding infinitely */
+    overflow: hidden;
     opacity: 0;
     visibility: hidden;
-    height: 0;
-    min-height: 0;
-    padding: 0 25px; /* Mantém o alinhamento lateral */
     background: transparent;
     transition: opacity 0.3s ease, visibility 0.3s ease;
     box-shadow: none;
   }
 
   .nav-menu.active {
+    height: 100%;
     opacity: 1;
     visibility: visible;
-    height: auto;
-    padding-top: 10px;
+    overflow-y: auto;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    padding-top: 20px;
     padding-bottom: 40px;
   }
 
   .nav-menu ul li a {
-    padding: 20px 10px;
+    padding: 20px 30px;
     border-radius: 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.03);
   }

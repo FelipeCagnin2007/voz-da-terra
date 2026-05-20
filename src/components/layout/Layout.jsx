@@ -40,19 +40,17 @@ export const Layout = ({ children }) => {
   const SidebarContent = () => (
     <>
       <div className="sidebar-top">
-        <div className="sidebar-header">
-          <div className="logo">
-            <img src="/logo.png" alt="logo" />
-            <div>VOZ DA<br />TERRA</div>
-          </div>
-
-          <button
-            className={`hamburger ${isMenuOpen ? 'active' : ''}`}
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <span></span><span></span><span></span>
-          </button>
+        <div className="logo">
+          <img src="/logo.png" alt="logo" />
+          <div>VOZ DA<br />TERRA</div>
         </div>
+
+        <button
+          className={`hamburger ${isMenuOpen ? 'active' : ''}`}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <span></span><span></span><span></span>
+        </button>
 
         <nav className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
           <ul>
