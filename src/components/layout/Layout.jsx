@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthContext } from '../../context/AuthContext'
 import { useAuth } from '../../hooks/useAuth'
@@ -9,6 +9,17 @@ export const Layout = ({ children }) => {
   const location = useLocation()
   const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isMenuOpen])
 
   const handleSignOut = async () => {
     const { error } = await signOut()
@@ -29,19 +40,17 @@ export const Layout = ({ children }) => {
   const SidebarContent = () => (
     <>
       <div className="sidebar-top">
-        <div className="sidebar-header">
-          <div className="logo">
-            <img src="/logo.png" alt="logo" />
-            <div>VOZ DA<br />TERRA</div>
-          </div>
-
-          <button
-            className={`hamburger ${isMenuOpen ? 'active' : ''}`}
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <span></span><span></span><span></span>
-          </button>
+        <div className="logo">
+          <img src="/logo.png" alt="logo" />
+          <div>VOZ DA<br />TERRA</div>
         </div>
+
+        <button
+          className={`hamburger ${isMenuOpen ? 'active' : ''}`}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <span></span><span></span><span></span>
+        </button>
 
         <nav className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
           <ul>
